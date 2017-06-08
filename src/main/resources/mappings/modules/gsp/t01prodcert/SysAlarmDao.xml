@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t01prodcert.SysAlarmDao">
+    
+	<sql id="sysAlarmColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.del_flag AS "delFlag",
+		a.proc_ins_id AS "procInsId",
+		a.tbl_name AS "tblName",
+		a.record_id AS "recordId.id",
+		a.judg_method AS "judgMethod",
+		a.warn_level AS "warnLevel",
+		a.warn_cont AS "warnCont",
+		a.warn_type AS "warnType",
+		a.warn_status AS "warnStatus",
+		a.to_time AS "toTime",
+		a.remarks AS "remarks"
+	</sql>
+	
+	<sql id="sysAlarmJoins">
+		LEFT JOIN t01_prod_cert b ON b.id = a.record_id
+	</sql>
+    
+	<select id="get" resultType="SysAlarm">
+		SELECT 
+			<include refid="sysAlarmColumns"/>
+		FROM sys_alarm a
+		<include refid="sysAlarmJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SysAlarm">
+		SELECT 
+			<include refid="sysAlarmColumns"/>
+		FROM sys_alarm a
+		<include refid="sysAlarmJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+				AND a.update_by = #{updateBy.id}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+			<if test="delFlag != null and delFlag != ''">
+				AND a.del_flag = #{delFlag}
+			</if>
+			<if test="procInsId != null and procInsId != ''">
+				AND a.proc_ins_id = #{procInsId}
+			</if>
+			<if test="tblName != null and tblName != ''">
+				AND a.tbl_name = #{tblName}
+			</if>
+			<if test="recordId != null and recordId.id != null and recordId.id != ''">
+				AND a.record_id = #{recordId.id}
+			</if>
+			<if test="judgMethod != null and judgMethod != ''">
+				AND a.judg_method = #{judgMethod}
+			</if>
+			<if test="warnLevel != null and warnLevel != ''">
+				AND a.warn_level = #{warnLevel}
+			</if>
+			<if test="warnCont != null and warnCont != ''">
+				AND a.warn_cont = #{warnCont}
+			</if>
+			<if test="warnType != null and warnType != ''">
+				AND a.warn_type = #{warnType}
+			</if>
+			<if test="warnStatus != null and warnStatus != ''">
+				AND a.warn_status = #{warnStatus}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SysAlarm">
+		SELECT 
+			<include refid="sysAlarmColumns"/>
+		FROM sys_alarm a
+		<include refid="sysAlarmJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sys_alarm(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			del_flag,
+			proc_ins_id,
+			tbl_name,
+			record_id,
+			judg_method,
+			warn_level,
+			warn_cont,
+			warn_type,
+			warn_status,
+			to_time,
+			remarks
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{delFlag},
+			#{procInsId},
+			#{tblName},
+			#{recordId.id},
+			#{judgMethod},
+			#{warnLevel},
+			#{warnCont},
+			#{warnType},
+			#{warnStatus},
+			#{toTime},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sys_alarm SET 	
+			proc_ins_id = #{procInsId},
+			tbl_name = #{tblName},
+			record_id = #{recordId.id},
+			judg_method = #{judgMethod},
+			warn_level = #{warnLevel},
+			warn_cont = #{warnCont},
+			warn_type = #{warnType},
+			warn_status = #{warnStatus},
+			to_time = #{toTime},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE sys_alarm SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		<choose>
+			<when test="id !=null and id != ''">
+				WHERE id = #{id}
+			</when>
+			<otherwise>
+				WHERE record_id = #{recordId.id}
+			</otherwise>
+		</choose>
+	</update>
+	
+</mapper>

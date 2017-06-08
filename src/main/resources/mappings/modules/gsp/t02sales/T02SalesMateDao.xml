@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t02sales.T02SalesMateDao">
+    
+	<sql id="t02SalesMateColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.proc_ins_id AS "procInsId",
+		a.mate_id AS "mateId",
+		a.sales_id AS "salesId.id",
+		a.sale_price AS "salePrice",
+		a.sale_count AS "saleCount",
+		a.unit AS "unit",
+		a.amount AS "amount",
+		a.comm_code AS "commCode",
+		a.comm_bar_code AS "commBarCode",
+		a.conv_code AS "convCode",
+		a.outer_box_cont AS "outerBoxCont",
+		a.order_quan AS "orderQuan",
+		a.supp_comm_code AS "suppCommCode",
+		a.inve_cost AS "inveCost",
+		a.price_disc AS "priceDisc",
+		a.tax_amou AS "taxAmou",
+		a.no_tax_amou AS "noTaxAmou",
+		a.acti_type AS "actiType",
+		a.prom_sale_no AS "promSaleNo",
+		a.base_price AS "basePrice",
+		a.reta_amou AS "retaAmou",
+		a.stan_box_quan AS "stanBoxQuan",
+		a.sing_prod_cost AS "singProdCost"
+	</sql>
+	
+	<sql id="t02SalesMateJoins">
+		LEFT JOIN t02_sales b ON b.id = a.sales_id
+	</sql>
+    
+	<select id="get" resultType="T02SalesMate">
+		SELECT 
+			<include refid="t02SalesMateColumns"/>
+		FROM t02_sales_mate a
+		<include refid="t02SalesMateJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="T02SalesMate">
+		SELECT 
+			<include refid="t02SalesMateColumns"/>
+		FROM t02_sales_mate a
+		<include refid="t02SalesMateJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="salesId != null and salesId.id != null and salesId.id != ''">
+				AND a.sales_id = #{salesId.id}
+			</if>
+			<if test="mateId != null and mateId != null and mateId != ''">
+				AND a.mate_id = #{mateId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="T02SalesMate">
+		SELECT 
+			<include refid="t02SalesMateColumns"/>
+		FROM t02_sales_mate a
+		<include refid="t02SalesMateJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t02_sales_mate(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			proc_ins_id,
+			mate_id,
+			sales_id,
+			sale_price,
+			sale_count,
+			unit,
+			amount,
+			comm_code,
+			comm_bar_code,
+			conv_code,
+			outer_box_cont,
+			order_quan,
+			supp_comm_code,
+			inve_cost,
+			price_disc,
+			tax_amou,
+			no_tax_amou,
+			acti_type,
+			prom_sale_no,
+			base_price,
+			reta_amou,
+			stan_box_quan,
+			sing_prod_cost
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{procInsId},
+			#{mateId},
+			#{salesId.id},
+			#{salePrice},
+			#{saleCount},
+			#{unit},
+			#{amount},
+			#{commCode},
+			#{commBarCode},
+			#{convCode},
+			#{outerBoxCont},
+			#{orderQuan},
+			#{suppCommCode},
+			#{inveCost},
+			#{priceDisc},
+			#{taxAmou},
+			#{noTaxAmou},
+			#{actiType},
+			#{promSaleNo},
+			#{basePrice},
+			#{retaAmou},
+			#{stanBoxQuan},
+			#{singProdCost}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t02_sales_mate SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			proc_ins_id = #{procInsId},
+			mate_id = #{mateId},
+			sales_id = #{salesId.id},
+			sale_price = #{salePrice},
+			sale_count = #{saleCount},
+			unit = #{unit},
+			amount = #{amount},
+			comm_code = #{commCode},
+			comm_bar_code = #{commBarCode},
+			conv_code = #{convCode},
+			outer_box_cont = #{outerBoxCont},
+			order_quan = #{orderQuan},
+			supp_comm_code = #{suppCommCode},
+			inve_cost = #{inveCost},
+			price_disc = #{priceDisc},
+			tax_amou = #{taxAmou},
+			no_tax_amou = #{noTaxAmou},
+			acti_type = #{actiType},
+			prom_sale_no = #{promSaleNo},
+			base_price = #{basePrice},
+			reta_amou = #{retaAmou},
+			stan_box_quan = #{stanBoxQuan},
+			sing_prod_cost = #{singProdCost}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t02_sales_mate SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		<choose>
+			<when test="id !=null and id != ''">
+				WHERE id = #{id}
+			</when>
+			<otherwise>
+				WHERE sales_id = #{salesId.id}
+			</otherwise>
+		</choose>
+	</update>
+	
+</mapper>

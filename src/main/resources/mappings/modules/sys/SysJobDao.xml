@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.sys.dao.SysJobDao">
+    
+	<sql id="sysJobColumns">
+		a.id AS "id",
+		a.job_name AS "jobName",
+		a.targger_name AS "targgerName",
+		a.job_group AS "jobGroup",
+		a.trigger_group AS "triggerGroup",
+		a.clazz_name AS "clazzName",
+		a.job_status AS "jobStatus",
+		a.last_run_time AS "lastRunTime",
+		a.expression AS "expression"
+	</sql>
+	
+	<sql id="sysJobJoins">
+	</sql>
+    
+	<select id="get" resultType="SysJob">
+		SELECT 
+			<include refid="sysJobColumns"/>
+		FROM sys_job a
+		<include refid="sysJobJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SysJob">
+		SELECT 
+			<include refid="sysJobColumns"/>
+		FROM sys_job a
+		<include refid="sysJobJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SysJob">
+		SELECT 
+			<include refid="sysJobColumns"/>
+		FROM sys_job a
+		<include refid="sysJobJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sys_job(
+			id,
+			job_name,
+			targger_name,
+			job_group,
+			trigger_group,
+			clazz_name,
+			job_status,
+			last_run_time,
+			expression
+		) VALUES (
+			#{id},
+			#{jobName},
+			#{targgerName},
+			#{jobGroup},
+			#{triggerGroup},
+			#{clazzName},
+			#{jobStatus},
+			#{lastRunTime},
+			#{expression}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sys_job SET 	
+			job_name = #{jobName},
+			targger_name = #{targgerName},
+			job_group = #{jobGroup},
+			trigger_group = #{triggerGroup},
+			clazz_name = #{clazzName},
+			job_status = #{jobStatus},
+			last_run_time = #{lastRunTime},
+			expression = #{expression}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM sys_job
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

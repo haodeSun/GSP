@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="12px" height="12px" viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Custom-Preset" transform="translate(-1098.000000, -511.000000)">
+            <g id="导出BG-滑过" transform="translate(1086.000000, 500.000000)">
+                <g id="导出" transform="translate(12.000000, 10.000000)">
+                    <g id="导出icon-滑过" transform="translate(0.000000, 1.000000)">
+                        <path d="M10.5,12 L1.5,12 C0.673,12 0,11.297 0,10.433 L0,2.567 C0,1.703 0.673,1 1.5,1 L3,1 C3.276,1 3.5,1.234 3.5,1.522 C3.5,1.811 3.276,2.045 3,2.045 L1.5,2.045 C1.224,2.045 1,2.279 1,2.567 L1,10.433 C1,10.721 1.224,10.955 1.5,10.955 L10.5,10.955 C10.776,10.955 11,10.721 11,10.433 L11,2.567 C11,2.279 10.776,2.045 10.5,2.045 L9,2.045 C8.724,2.045 8.5,1.811 8.5,1.522 C8.5,1.234 8.724,1 9,1 L10.5,1 C11.327,1 12,1.703 12,2.567 L12,10.433 C12,11.297 11.327,12 10.5,12" id="Fill-1" fill="#FFFFFF"></path>
+                        <path d="M6,6 L6,6 C5.724,6 5.5,5.776 5.5,5.5 L5.5,0.5 C5.5,0.224 5.724,0 6,0 L6,0 C6.276,0 6.5,0.224 6.5,0.5 L6.5,5.5 C6.5,5.776 6.276,6 6,6" id="Fill-3" fill="#FFFFFF"></path>
+                        <polyline id="Stroke-5" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" points="8 4.5 7 5.5 6 6.5 5 5.5 4 4.5"></polyline>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

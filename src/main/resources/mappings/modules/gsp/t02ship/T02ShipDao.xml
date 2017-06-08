@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t02ship.T02ShipDao">
+    
+	<sql id="t02ShipColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.proc_ins_id AS "procInsId",
+		a.invo_no AS "invoNo",
+		a.way_bill_no AS "wayBillNo",
+		a.supp_code AS "suppCode",
+		a.name AS "name",
+		a.purc_order_no AS "purcOrderNo",
+		a.arri_date AS "arriDate",
+		a.tran_agree AS "tranAgree",
+		a.have_peer_list AS "havePeerList",
+		a.deli_man AS "deliMan",
+		a.peer_list_agree AS "peerListAgree",
+		a.reci_man AS "reciMan",
+		a.to_exam AS "toExam"
+	</sql>
+	
+	<sql id="t02ShipJoins">
+	</sql>
+    
+	<select id="get" resultType="T02Ship">
+		SELECT 
+			<include refid="t02ShipColumns"/>
+		FROM t02_ship a
+		<include refid="t02ShipJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="T02Ship">
+		SELECT 
+			<include refid="t02ShipColumns"/>
+		FROM t02_ship a
+		<include refid="t02ShipJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+				AND a.update_by = #{updateBy.id}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+			<if test="procInsId != null and procInsId != ''">
+				AND a.proc_ins_id = #{procInsId}
+			</if>
+			<if test="invoNo != null and invoNo != ''">
+				AND a.invo_no = #{invoNo}
+			</if>
+			<if test="wayBillNo != null and wayBillNo != ''">
+				AND a.way_bill_no = #{wayBillNo}
+			</if>
+			<if test="suppCode != null and suppCode != ''">
+				AND a.supp_code = #{suppCode}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="purcOrderNo != null and purcOrderNo != ''">
+				AND a.purc_order_no = #{purcOrderNo}
+			</if>
+			<if test="arriDate != null and arriDate != ''">
+				AND a.arri_date = #{arriDate}
+			</if>
+			<if test="tranAgree != null and tranAgree != ''">
+				AND a.tran_agree = #{tranAgree}
+			</if>
+			<if test="havePeerList != null and havePeerList != ''">
+				AND a.have_peer_list = #{havePeerList}
+			</if>
+			<if test="deliMan != null and deliMan != ''">
+				AND a.deli_man = #{deliMan}
+			</if>
+			<if test="peerListAgree != null and peerListAgree != ''">
+				AND a.peer_list_agree = #{peerListAgree}
+			</if>
+			<if test="reciMan != null and reciMan != ''">
+				AND a.reci_man = #{reciMan}
+			</if>
+			<if test="toExam != null and toExam != ''">
+				AND a.to_exam = #{toExam}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="T02Ship">
+		SELECT 
+			<include refid="t02ShipColumns"/>
+		FROM t02_ship a
+		<include refid="t02ShipJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t02_ship(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			proc_ins_id,
+			invo_no,
+			way_bill_no,
+			supp_code,
+			name,
+			purc_order_no,
+			arri_date,
+			tran_agree,
+			have_peer_list,
+			deli_man,
+			peer_list_agree,
+			reci_man,
+			to_exam
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{procInsId},
+			#{invoNo},
+			#{wayBillNo},
+			#{suppCode},
+			#{name},
+			#{purcOrderNo},
+			#{arriDate},
+			#{tranAgree},
+			#{havePeerList},
+			#{deliMan},
+			#{peerListAgree},
+			#{reciMan},
+			#{toExam}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t02_ship SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			proc_ins_id = #{procInsId},
+			invo_no = #{invoNo},
+			way_bill_no = #{wayBillNo},
+			supp_code = #{suppCode},
+			name = #{name},
+			purc_order_no = #{purcOrderNo},
+			arri_date = #{arriDate},
+			tran_agree = #{tranAgree},
+			have_peer_list = #{havePeerList},
+			deli_man = #{deliMan},
+			peer_list_agree = #{peerListAgree},
+			reci_man = #{reciMan},
+			to_exam = #{toExam}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t02_ship SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

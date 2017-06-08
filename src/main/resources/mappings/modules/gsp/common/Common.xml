@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.common.CommonDao">
+
+    <select id="getRelateInvoicingNum" resultType="int">
+        SELECT
+            COUNT(*) AS num
+        FROM
+            (SELECT id, mate_id, del_flag FROM t02_purc_mate
+             UNION ALL
+             SELECT id, mate_id, del_flag FROM t02_sales_mate
+             UNION ALL
+             SELECT id, mate_id, del_flag FROM t02_stockin_mate
+             UNION ALL
+             SELECT id, mate_id, del_flag FROM t02_stockout_mate
+             ) AS a
+        WHERE
+            del_flag = '0'
+        AND mate_id IN
+        <foreach collection="list" index="index" item="item" open="("
+                 separator="," close=")">
+            #{item}
+        </foreach>
+	</select>
+
+    <select id="checkDataExistById" resultType="int">
+        SELECT COUNT(*)
+        FROM ${param1}
+        WHERE  id= #{param2}
+        AND del_flag=0
+    </select>
+
+    <insert id="insertT01OperateHist">
+        INSERT INTO t01_operate_hist(
+        id,
+        module,
+        dataId,
+        operate_type,
+        description,
+        create_by,
+        create_date,
+        update_by,
+        update_date,
+        remarks,
+        del_flag
+        ) VALUES (
+        #{id},
+        #{module},
+        #{dataId},
+        #{operateType},
+        #{description},
+        #{createBy.id},
+        #{createDate},
+        #{updateBy.id},
+        #{updateDate},
+        #{remarks},
+        #{delFlag}
+        )
+    </insert>
+</mapper>

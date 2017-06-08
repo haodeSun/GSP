@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="10px" height="11px" viewBox="0 0 10 11" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 40.3 (33839) - http://www.bohemiancoding.com/sketch -->
+    <title>日历</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="2-1-5-1-首营-产品资质-产品资质审批-等待审批" transform="translate(-626.000000, -376.000000)">
+            <g id="表格" transform="translate(214.000000, 168.000000)">
+                <g id="日历" transform="translate(412.000000, 208.000000)">
+                    <path d="M0.997959184,9.35905138 L8.98068027,9.35905138 L8.98068027,2.40176172 L0.997959184,2.40176172 L0.997959184,9.35905138 Z M9.76721088,0 L8.1044898,0 L6.54687075,0 L3.43163265,0 L1.87401361,0 L0.21122449,0 C0.0950340136,0 0,0.0946583851 0,0.21038961 L0,10.2018972 C0,10.3176285 0.0950340136,10.4122868 0.21122449,10.4122868 L9.76721088,10.4122868 C9.88340136,10.4122868 9.97843537,10.3176285 9.97843537,10.2018972 L9.97843537,0.21038961 C9.97843537,0.0946583851 9.88340136,0 9.76721088,0 L9.76721088,0 Z" id="Fill-1" fill="#969696"></path>
+                    <polygon id="Fill-3" fill="#999999" points="2 5.12702428 3.1314966 5.12702428 3.1314966 4 2 4"></polygon>
+                    <polygon id="Fill-4" fill="#999999" points="5 5.12702428 6.1314966 5.12702428 6.1314966 4 5 4"></polygon>
+                    <polygon id="Fill-5" fill="#999999" points="7 5.12702428 8.1314966 5.12702428 8.1314966 4 7 4"></polygon>
+                    <polygon id="Fill-6" fill="#999999" points="2 7.12702428 3.1314966 7.12702428 3.1314966 6 2 6"></polygon>
+                    <polygon id="Fill-7" fill="#999999" points="5 7.12702428 6.1314966 7.12702428 6.1314966 6 5 6"></polygon>
+                    <polygon id="Fill-8" fill="#999999" points="7 7.12702428 8.1314966 7.12702428 8.1314966 6 7 6"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

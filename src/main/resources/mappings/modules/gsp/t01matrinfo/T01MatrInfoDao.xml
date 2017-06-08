@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t01matrinfo.T01MatrInfoDao">
+    
+	<sql id="t01MatrInfoColumns">
+		a.id AS "id",
+		a.matr_nbr AS "matrNbr",
+		a.matr_nm_cn AS "matrNmCn",
+		a.matr_nm_en AS "matrNmEn",
+		a.matr_desc AS "matrDesc",
+		a.matr_type AS "matrType",
+		a.price_unit AS "priceUnit",
+		a.matr_price AS "matrPrice",
+		a.mart_stat AS "martStat",
+		a.proc_ins_id AS "procInsId",
+		a.appr_stat AS "apprStat",
+		a.appr_opin AS "apprOpin",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.freeze AS "freeze"
+	</sql>
+	
+	<sql id="t01MatrInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="T01MatrInfo">
+		SELECT 
+			<include refid="t01MatrInfoColumns"/>
+		FROM t01_matr_info a
+		<include refid="t01MatrInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="T01MatrInfo">
+		SELECT 
+			<include refid="t01MatrInfoColumns"/>
+		FROM t01_matr_info a
+		<include refid="t01MatrInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="matrNbr != null and matrNbr != ''">
+				AND a.matr_nbr LIKE 
+					<if test="dbName == 'oracle'">'%'||#{matrNbr}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{matrNbr}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{matrNbr},'%')</if>
+			</if>
+			<if test="matrNmCn != null and matrNmCn != ''">
+				AND a.matr_nm_cn LIKE 
+					<if test="dbName == 'oracle'">'%'||#{matrNmCn}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{matrNmCn}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{matrNmCn},'%')</if>
+			</if>
+			<if test="matrNmEn != null and matrNmEn != ''">
+				AND a.matr_nm_en LIKE 
+					<if test="dbName == 'oracle'">'%'||#{matrNmEn}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{matrNmEn}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{matrNmEn},'%')</if>
+			</if>
+			<if test="matrDesc != null and matrDesc != ''">
+				AND a.matr_desc LIKE 
+					<if test="dbName == 'oracle'">'%'||#{matrDesc}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{matrDesc}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{matrDesc},'%')</if>
+			</if>
+			<if test="matrType != null and matrType != ''">
+				AND a.matr_type = #{matrType}
+			</if>
+			<if test="priceUnit != null and priceUnit != ''">
+				AND a.price_unit = #{priceUnit}
+			</if>
+			<if test="matrPrice != null and matrPrice != ''">
+				AND a.matr_price = #{matrPrice}
+			</if>
+			<if test="martStat != null and martStat != ''">
+				AND a.mart_stat = #{martStat}
+			</if>
+			<if test="apprStat != null and apprStat != ''">
+				AND a.appr_stat = #{apprStat}
+			</if>
+			<if test="apprOpin != null and apprOpin != ''">
+				AND a.appr_opin = #{apprOpin}
+			</if>
+			<if test="updateDate != null">
+				AND  date_format(a.update_date,'%Y-%m-%d')= date_format(#{updateDate},'%Y-%m-%d')
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks LIKE
+				<if test="dbName == 'oracle'">'%'||#{remarks}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{remarks}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{remarks},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY (CASE WHEN appr_stat='0' THEN 1
+								WHEN appr_stat='1' THEN 2
+								WHEN appr_stat='3' THEN 3
+								WHEN appr_stat='2' THEN 4 END),
+								a.update_date
+				DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="T01MatrInfo">
+		SELECT 
+			<include refid="t01MatrInfoColumns"/>
+		FROM t01_matr_info a
+		<include refid="t01MatrInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t01_matr_info(
+			id,
+			matr_nbr,
+			matr_nm_cn,
+			matr_nm_en,
+			matr_desc,
+			matr_type,
+			price_unit,
+			matr_price,
+			mart_stat,
+			proc_ins_id,
+			appr_stat,
+			appr_opin,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{matrNbr},
+			#{matrNmCn},
+			#{matrNmEn},
+			#{matrDesc},
+			#{matrType},
+			#{priceUnit},
+			#{matrPrice},
+			#{martStat},
+			#{procInsId},
+			#{apprStat},
+			#{apprOpin},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t01_matr_info SET
+			mart_stat = #{martStat},
+			matr_nbr = #{matrNbr},
+			matr_nm_cn = #{matrNmCn},
+			matr_nm_en = #{matrNmEn},
+			matr_desc = #{matrDesc},
+			matr_type = #{matrType},
+			price_unit = #{priceUnit},
+			matr_price = #{matrPrice},
+			appr_stat = #{apprStat},
+			remarks = #{remarks},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t01_matr_info SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

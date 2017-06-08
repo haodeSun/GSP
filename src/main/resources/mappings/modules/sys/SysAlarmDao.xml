@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.sys.dao.SysAlarmDao">
+    
+	<sql id="sysAlarmColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.class_name AS "className",
+		a.warn_cont AS "warnCont",
+		a.ahead_time AS "aheadTime",
+		a.alarm_freq AS "alarmFreq",
+		a.send_flag AS "sendFlag",
+		a.qualify_type AS "qualifyType",
+		a.last_alarm_time AS "lastAlarmTime"
+	</sql>
+	
+	<sql id="sysAlarmJoins">
+	</sql>
+    
+	<select id="get" resultType="SysAlarm">
+		SELECT 
+			<include refid="sysAlarmColumns"/>
+		FROM sys_alarm a
+		<include refid="sysAlarmJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SysAlarm">
+		SELECT 
+			<include refid="sysAlarmColumns"/>
+		FROM sys_alarm a
+		<include refid="sysAlarmJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SysAlarm">
+		SELECT 
+			<include refid="sysAlarmColumns"/>
+		FROM sys_alarm a
+		<include refid="sysAlarmJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sys_alarm(
+			id,
+			create_by,
+			create_date,
+			update_date,
+			update_by,
+			remarks,
+			del_flag,
+			class_name,
+			warn_cont,
+			ahead_time,
+			alarm_freq,
+			send_flag,
+			qualify_type,
+			last_alarm_time
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateDate},
+			#{updateBy.id},
+			#{remarks},
+			#{delFlag},
+			#{className},
+			#{warnCont},
+			#{aheadTime},
+			#{alarmFreq},
+			#{sendFlag},
+			#{qualifyType},
+			#{lastAlarmTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sys_alarm SET 	
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			class_name = #{className},
+			warn_cont = #{warnCont},
+			ahead_time = #{aheadTime},
+			alarm_freq = #{alarmFreq},
+			send_flag = #{sendFlag},
+			qualify_type = #{qualifyType},
+			last_alarm_time = #{lastAlarmTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE sys_alarm SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

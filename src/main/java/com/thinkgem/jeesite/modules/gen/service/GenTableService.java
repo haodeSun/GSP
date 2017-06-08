@@ -1,0 +1,180 @@
+/*
+ * Copyright &copy; 2012-2016 <a href="https://github.com/thinkgem/jeesite">JeeSite</a> All rights reserved.
+ */
+package com.thinkgem.jeesite.modules.gen.service;
+
+import com.thinkgem.jeesite.common.persistence.Page;
+import com.thinkgem.jeesite.common.utils.StringUtils;
+import com.thinkgem.jeesite.modules.gen.dao.GenDataBaseDictDao;
+import com.thinkgem.jeesite.modules.gen.dao.GenTableColumnDao;
+import com.thinkgem.jeesite.modules.gen.dao.GenTableDao;
+import com.thinkgem.jeesite.modules.gen.entity.GenTable;
+import com.thinkgem.jeesite.modules.gen.entity.GenTableColumn;
+import com.thinkgem.jeesite.modules.gen.util.GenUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
+
+import java.util.List;
+
+/**
+ * 业务表Service
+ * @author ThinkGem
+ * @version 2013-10-15
+ */
+@Service
+@Transactional(readOnly = true)
+public class GenTableService extends BaseSchemeService {
+
+	private final GenTableDao genTableDao;
+	private final GenTableColumnDao genTableColumnDao;
+	private final GenDataBaseDictDao genDataBaseDictDao;
+
+	@Autowired
+	public GenTableService(
+			GenTableDao genTableDao,
+			GenTableColumnDao genTableColumnDao,
+			GenDataBaseDictDao genDataBaseDictDao) {
+		Assert.notNull(genTableDao);
+		Assert.notNull(genTableColumnDao);
+		Assert.notNull(genDataBaseDictDao);
+		this.genTableDao = genTableDao;
+		this.genTableColumnDao = genTableColumnDao;
+		this.genDataBaseDictDao = genDataBaseDictDao;
+	}
+
+	public GenTable get(String id) {
+		GenTable genTable = genTableDao.get(id);
+		GenTableColumn genTableColumn = new GenTableColumn();
+		genTableColumn.setGenTable(new GenTable(genTable.getId()));
+		genTable.setColumnList(genTableColumnDao.findList(genTableColumn));
+		return genTable;
+	}
+	
+	public Page<GenTable> find(Page<GenTable> page, GenTable genTable) {
+		genTable.setPage(page);
+		page.setList(genTableDao.findList(genTable));
+		return page;
+	}
+
+	public List<GenTable> findAll() {
+		return genTableDao.findAllList(new GenTable());
+	}
+	
+	/**
+	 * 获取物理数据表列表
+	 * @param genTable 表查询条件
+	 * @return 查到的表列表
+	 */
+	public List<GenTable> findTableListFormDb(GenTable genTable){
+		return genDataBaseDictDao.findTableList(genTable);
+	}
+	
+	/**
+	 * 验证表名是否可用，如果已存在，则返回false
+	 * @param tableName 表名
+	 * @return 表存在true；反之false
+	 */
+	public boolean checkTableName(String tableName){
+		if (StringUtils.isBlank(tableName)){
+			return true;
+		}
+		GenTable genTable = new GenTable();
+		genTable.setName(tableName);
+		List<GenTable> list = genTableDao.findList(genTable);
+		return list.size() == 0;
+	}
+	
+	/**
+	 * 获取物理数据表列表
+	 * @param genTable table info
+	 * @return table info from db
+	 */
+	public GenTable getTableFormDb(GenTable genTable){
+		// 如果有表名，则获取物理表
+		if (StringUtils.isNotBlank(genTable.getName())){
+			
+			List<GenTable> list = genDataBaseDictDao.findTableList(genTable);
+			if (list.size() > 0){
+				
+				// 如果是新增，初始化表属性
+				if (StringUtils.isBlank(genTable.getId())){
+					genTable = list.get(0);
+					// 设置字段说明
+					if (StringUtils.isBlank(genTable.getComments())){
+						genTable.setComments(genTable.getName());
+					}
+					genTable.setClassName(StringUtils.toCapitalizeCamelCase(genTable.getName()));
+				}
+				
+				// 添加新列
+				List<GenTableColumn> columnList = genDataBaseDictDao.findTableColumnList(genTable);
+				for (GenTableColumn column : columnList){
+					boolean b = false;
+					for (GenTableColumn e : genTable.getColumnList()){
+						if (e.getName().equals(column.getName())){
+							b = true;
+						}
+					}
+					if (!b){
+						genTable.getColumnList().add(column);
+					}
+				}
+				
+				// 删除已删除的列
+				for (GenTableColumn e : genTable.getColumnList()){
+					boolean b = false;
+					for (GenTableColumn column : columnList){
+						if (column.getName().equals(e.getName())){
+							b = true;
+						}
+					}
+					if (!b){
+						e.setDelFlag(GenTableColumn.DEL_FLAG_DELETE);
+					}
+				}
+				
+				// 获取主键
+				genTable.setPkList(genDataBaseDictDao.findTablePK(genTable));
+				
+				// 初始化列属性字段
+				GenUtils.initColumnField(genTable);
+				
+			}
+		}
+		return genTable;
+	}
+
+	// FIXME 这里的操作居然没有检查更新失败
+	@Transactional
+	public void save(GenTable genTable) {
+		if (super.save(genTable) == PersistStatus.NEW){
+			genTableDao.insert(genTable);
+		}else{
+			genTableDao.update(genTable);
+		}
+		// 保存列
+		for (GenTableColumn column : genTable.getColumnList()){
+			column.setGenTable(genTable);
+			;
+			if (super.save(column) == PersistStatus.NEW){
+				genTableColumnDao.insert(column);
+			}else{
+				genTableColumnDao.update(column);
+			}
+		}
+	}
+	
+	@Transactional
+	public void delete(GenTable genTable) {
+		genTableDao.delete(genTable);
+		genTableColumnDao.deleteByGenTableId(genTable.getId());
+	}
+	public List<String> getGroupNames(String genTableId) {
+		return genTableColumnDao.getGroupNames(genTableId);
+	}
+	public int getGroupNumber(String genTableId) {
+		return genTableColumnDao.getGroupNumber(genTableId);
+	}
+}

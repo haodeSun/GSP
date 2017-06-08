@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t02stockout.T02StockoutDao">
+    
+	<sql id="t02StockoutColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.proc_ins_id AS "procInsId",
+		a.stoc_numb AS "stocNumb",
+		a.check_no AS "checkNo",
+		a.stoc_date AS "stocDate",
+		a.ware_name AS "wareName",
+		a.ware_sign AS "wareSign",
+		a.audit_pers AS "auditPers",
+		a.ware_house_id AS "wareHouseId",
+		a.orga_code AS "orgaCode",
+		a.comments AS "comments",
+		a.no_tax_amou AS "noTaxAmou",
+		a.box_count AS "boxCount",
+		a.sing_prod_count AS "singProdCount",
+		a.deli_date AS "deliDate"
+	</sql>
+	
+	<sql id="t02StockoutJoins">
+	</sql>
+    
+	<select id="get" resultType="T02Stockout">
+		SELECT 
+			<include refid="t02StockoutColumns"/>
+		FROM t02_stockout a
+		<include refid="t02StockoutJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="T02Stockout">
+		SELECT 
+			<include refid="t02StockoutColumns"/>
+		FROM t02_stockout a
+		<include refid="t02StockoutJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="T02Stockout">
+		SELECT 
+			<include refid="t02StockoutColumns"/>
+		FROM t02_stockout a
+		<include refid="t02StockoutJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t02_stockout(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			proc_ins_id,
+			stoc_numb,
+			check_no,
+			stoc_date,
+			ware_name,
+			ware_sign,
+			audit_pers,
+			ware_house_id,
+			orga_code,
+			comments,
+			no_tax_amou,
+			box_count,
+			sing_prod_count,
+			deli_date
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{procInsId},
+			#{stocNumb},
+			#{checkNo},
+			#{stocDate},
+			#{wareName},
+			#{wareSign},
+			#{auditPers},
+			#{wareHouseId},
+			#{orgaCode},
+			#{comments},
+			#{noTaxAmou},
+			#{boxCount},
+			#{singProdCount},
+			#{deliDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t02_stockout SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			proc_ins_id = #{procInsId},
+			stoc_numb = #{stocNumb},
+			check_no = #{checkNo},
+			stoc_date = #{stocDate},
+			ware_name = #{wareName},
+			ware_sign = #{wareSign},
+			audit_pers = #{auditPers},
+			ware_house_id = #{wareHouseId},
+			orga_code = #{orgaCode},
+			comments = #{comments},
+			no_tax_amou = #{noTaxAmou},
+			box_count = #{boxCount},
+			sing_prod_count = #{singProdCount},
+			deli_date = #{deliDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t02_stockout SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

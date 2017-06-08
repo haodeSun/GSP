@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="184px" height="50px" viewBox="0 0 184 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 40.3 (33839) - http://www.bohemiancoding.com/sketch -->
+    <title>4级菜单-绿色渐变</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="115.881878%" y1="50%" x2="38.0859375%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#1FB5AC" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#1FB5AC" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="0-2-个人中心下拉菜单" transform="translate(0.000000, -196.000000)">
+            <g id="sidebar-copy" transform="translate(0.000000, 50.000000)">
+                <g id="4级菜单-绿色渐变" transform="translate(0.000000, 146.000000)">
+                    <rect id="侧边栏-绿色渐变" fill="url(#linearGradient-1)" x="0" y="0" width="184" height="50"></rect>
+                    <circle id="Oval-2-Copy" fill="#FFFFFF" cx="31" cy="25" r="3"></circle>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

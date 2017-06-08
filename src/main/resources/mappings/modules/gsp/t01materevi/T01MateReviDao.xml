@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t01materevi.T01MateReviDao">
+    
+	<sql id="t01MateReviColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.proc_ins_id AS "procInsId",
+		a.comp_numb AS "compNumb",
+		a.comp_name AS "compName",
+		a.cert_numb AS "certNumb",
+		a.cert_name AS "certName",
+		a.chan_situ AS "chanSitu",
+		a.view_qual AS "viewQual"
+	</sql>
+	
+	<sql id="t01MateReviJoins">
+	</sql>
+    
+	<select id="get" resultType="T01MateRevi">
+		SELECT 
+			<include refid="t01MateReviColumns"/>
+		FROM t01_mate_revi a
+		<include refid="t01MateReviJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="T01MateRevi">
+		SELECT 
+			<include refid="t01MateReviColumns"/>
+		FROM t01_mate_revi a
+		<include refid="t01MateReviJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+				AND a.update_by = #{updateBy.id}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+			<if test="delFlag != null and delFlag != ''">
+				AND a.del_flag = #{delFlag}
+			</if>
+			<if test="procInsId != null and procInsId != ''">
+				AND a.proc_ins_id = #{procInsId}
+			</if>
+			<if test="compNumb != null and compNumb != ''">
+				AND a.comp_numb = #{compNumb}
+			</if>
+			<if test="compName != null and compName != ''">
+				AND a.comp_name = #{compName}
+			</if>
+			<if test="certNumb != null and certNumb != ''">
+				AND a.cert_numb = #{certNumb}
+			</if>
+			<if test="certName != null and certName != ''">
+				AND a.cert_name = #{certName}
+			</if>
+			<if test="chanSitu != null and chanSitu != ''">
+				AND a.chan_situ = #{chanSitu}
+			</if>
+			<if test="viewQual != null and viewQual != ''">
+				AND a.view_qual = #{viewQual}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="T01MateRevi">
+		SELECT 
+			<include refid="t01MateReviColumns"/>
+		FROM t01_mate_revi a
+		<include refid="t01MateReviJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t01_mate_revi(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			proc_ins_id,
+			comp_numb,
+			comp_name,
+			cert_numb,
+			cert_name,
+			chan_situ,
+			view_qual
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{procInsId},
+			#{compNumb},
+			#{compName},
+			#{certNumb},
+			#{certName},
+			#{chanSitu},
+			#{viewQual}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t01_mate_revi SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			proc_ins_id = #{procInsId},
+			comp_numb = #{compNumb},
+			comp_name = #{compName},
+			cert_numb = #{certNumb},
+			cert_name = #{certName},
+			chan_situ = #{chanSitu},
+			view_qual = #{viewQual}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t01_mate_revi SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

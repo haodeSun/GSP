@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t02receipt.T02ReceiptDao">
+    
+	<sql id="t02ReceiptColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.proc_ins_id AS "procInsId",
+		a.rece_no AS "receNo",
+		a.way_bill_no AS "wayBillNo",
+		a.supp_code AS "suppCode",
+		a.rece_name AS "receName",
+		a.purc_order_no AS "purcOrderNo",
+		a.arri_date AS "arriDate",
+		a.tran_agree AS "tranAgree",
+		a.have_peer_list AS "havePeerList",
+		a.deli_man AS "deliMan",
+		a.reci_man AS "reciMan",
+		a.peer_list_agree AS "peerListAgree",
+		a.to_exam AS "toExam"
+	</sql>
+	
+	<sql id="t02ReceiptJoins">
+	</sql>
+    
+	<select id="get" resultType="T02Receipt">
+		SELECT 
+			<include refid="t02ReceiptColumns"/>
+		FROM t02_receipt a
+		<include refid="t02ReceiptJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="T02Receipt">
+		SELECT 
+			<include refid="t02ReceiptColumns"/>
+		FROM t02_receipt a
+		<include refid="t02ReceiptJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+				AND a.update_by = #{updateBy.id}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+			<if test="procInsId != null and procInsId != ''">
+				AND a.proc_ins_id = #{procInsId}
+			</if>
+			<if test="receNo != null and receNo != ''">
+				AND a.rece_no = #{receNo}
+			</if>
+			<if test="wayBillNo != null and wayBillNo != ''">
+				AND a.way_bill_no = #{wayBillNo}
+			</if>
+			<if test="suppCode != null and suppCode != ''">
+				AND a.supp_code = #{suppCode}
+			</if>
+			<if test="receName != null and receName != ''">
+				AND a.rece_name = #{receName}
+			</if>
+			<if test="purcOrderNo != null and purcOrderNo != ''">
+				AND a.purc_order_no = #{purcOrderNo}
+			</if>
+			<if test="arriDate != null and arriDate != ''">
+				AND a.arri_date = #{arriDate}
+			</if>
+			<if test="tranAgree != null and tranAgree != ''">
+				AND a.tran_agree = #{tranAgree}
+			</if>
+			<if test="havePeerList != null and havePeerList != ''">
+				AND a.have_peer_list = #{havePeerList}
+			</if>
+			<if test="deliMan != null and deliMan != ''">
+				AND a.deli_man = #{deliMan}
+			</if>
+			<if test="reciMan != null and reciMan != ''">
+				AND a.reci_man = #{reciMan}
+			</if>
+			<if test="peerListAgree != null and peerListAgree != ''">
+				AND a.peer_list_agree = #{peerListAgree}
+			</if>
+			<if test="toExam != null and toExam != ''">
+				AND a.to_exam = #{toExam}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="T02Receipt">
+		SELECT 
+			<include refid="t02ReceiptColumns"/>
+		FROM t02_receipt a
+		<include refid="t02ReceiptJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t02_receipt(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			proc_ins_id,
+			rece_no,
+			way_bill_no,
+			supp_code,
+			rece_name,
+			purc_order_no,
+			arri_date,
+			tran_agree,
+			have_peer_list,
+			deli_man,
+			reci_man,
+			peer_list_agree,
+			to_exam
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{procInsId},
+			#{receNo},
+			#{wayBillNo},
+			#{suppCode},
+			#{receName},
+			#{purcOrderNo},
+			#{arriDate},
+			#{tranAgree},
+			#{havePeerList},
+			#{deliMan},
+			#{reciMan},
+			#{peerListAgree},
+			#{toExam}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t02_receipt SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			proc_ins_id = #{procInsId},
+			rece_no = #{receNo},
+			way_bill_no = #{wayBillNo},
+			supp_code = #{suppCode},
+			rece_name = #{receName},
+			purc_order_no = #{purcOrderNo},
+			arri_date = #{arriDate},
+			tran_agree = #{tranAgree},
+			have_peer_list = #{havePeerList},
+			deli_man = #{deliMan},
+			reci_man = #{reciMan},
+			peer_list_agree = #{peerListAgree},
+			to_exam = #{toExam}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t02_receipt SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

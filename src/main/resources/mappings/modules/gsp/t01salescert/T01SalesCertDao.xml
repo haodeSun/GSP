@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t01salescert.T01SalesCertDao">
+    
+	<sql id="t01SalesCertColumns">
+		${alias}.id              AS "${prefix}id",
+		${alias}.create_by       AS "${prefix}createBy.id",
+		${alias}.create_date     AS "${prefix}createDate",
+		${alias}.update_by       AS "${prefix}updateBy.id",
+		${alias}.update_date     AS "${prefix}updateDate",
+		${alias}.remarks         AS "${prefix}remarks",
+		${alias}.del_flag        AS "${prefix}delFlag",
+		${alias}.proc_ins_id     AS "${prefix}procInsId",
+		${alias}.sales_name      AS "${prefix}salesName",
+		${alias}.id_type         AS "${prefix}idType",
+		${alias}.id_nbr          AS "${prefix}idNbr",
+		${alias}.sales_area      AS "${prefix}salesArea",
+		${alias}.sales_scop      AS "${prefix}salesScop",
+		${alias}.sales_cert_nbr  AS "${prefix}salesCertNbr",
+		${alias}.effec_date      AS "${prefix}effecDate",
+		${alias}.valid_date      AS "${prefix}validDate",
+		${alias}.appr_stat       AS "${prefix}apprStat",
+		${alias}.attachment      AS "${prefix}attachment",
+		${alias}.cert_stat 		AS "${prefix}certStat"
+	</sql>
+	
+	<sql id="t01SalesCertJoins">
+		LEFT JOIN t01_comp_info b ON b.id = a.comp_id
+	</sql>
+    
+	<select id="get" resultType="T01SalesCert">
+		SELECT
+		<include refid="t01SalesCertColumns">
+			<property name="alias" value="a"/>
+			<property name="prefix" value=""/>
+		</include>,
+		<include refid="com.thinkgem.jeesite.modules.gsp.dao.t01compinfo.T01CompInfoDao.t01CompInfoColumns">
+			<property name="alias" value="b"/>
+			<property name="prefix" value="comp."/>
+		</include>
+		FROM t01_sales_cert a
+		<include refid="t01SalesCertJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="T01SalesCert">
+		SELECT
+		<include refid="t01SalesCertColumns">
+			<property name="alias" value="a"/>
+			<property name="prefix" value=""/>
+		</include>,
+		<include refid="com.thinkgem.jeesite.modules.gsp.dao.t01compinfo.T01CompInfoDao.t01CompInfoColumns">
+			<property name="alias" value="b"/>
+			<property name="prefix" value="comp."/>
+		</include>
+		FROM t01_sales_cert a
+		<include refid="t01SalesCertJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="comp != null and comp.id != null and comp.id != ''">
+				AND a.comp_id = #{comp.id}
+			</if>
+			<if test="comp != null and comp.compNameCn != null and comp.compNameCn != ''">
+				AND b.comp_name_cn LIKE
+				<if test="dbName == 'oracle'">'%'||#{comp.compNameCn}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{comp.compNameCn}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{comp.compNameCn},'%')</if>
+			</if>
+			<if test="salesName != null and salesName != ''">
+				AND a.sales_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{salesName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{salesName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{salesName},'%')</if>
+			</if>
+			<if test="idType != null and idType != ''">
+				AND a.id_type = #{idType}
+			</if>
+			<if test="idNbr != null and idNbr != ''">
+				AND a.id_nbr LIKE
+				<if test="dbName == 'oracle'">'%'||#{idNbr}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{idNbr}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{idNbr},'%')</if>
+			</if>
+			<if test="salesArea != null and salesArea != ''">
+				AND a.sales_area LIKE
+				<if test="dbName == 'oracle'">'%'||#{salesArea}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{salesArea}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{salesArea},'%')</if>
+			</if>
+			<if test="salesScop != null and salesScop != ''">
+				AND a.sales_scop = #{salesScop}
+			</if>
+			<if test="salesCertNbr != null and salesCertNbr != ''">
+				AND a.sales_cert_nbr LIKE
+				<if test="dbName == 'oracle'">'%'||#{salesCertNbr}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{salesCertNbr}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{salesCertNbr},'%')</if>
+			</if>
+			<if test="effecDateBg != null">
+				AND  a.effec_date &gt;= #{effecDateBg}
+			</if>
+			<if test="effecDateEd != null">
+				AND   a.effec_date &lt;= #{effecDateEd}
+			</if>
+			<if test="validDateBg != null">
+				AND  a.valid_date &gt;= #{validDateBg}
+			</if>
+			<if test="validDateEd != null">
+				AND   a.valid_date &lt;= #{validDateEd}
+			</if>
+			<if test="updateDateBg != null">
+				AND  a.update_date &gt;= #{updateDateBg}
+			</if>
+			<if test="updateDateEd != null">
+				AND   a.update_date &lt;= #{updateDateEd}
+			</if>
+			<if test="apprStat != null and apprStat != ''">
+				AND a.appr_stat = #{apprStat}
+			</if>
+			<if test="certStat != null and certStat != ''">
+				AND a.cert_stat = #{certStat}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="T01SalesCert">
+		SELECT 
+			<include refid="t01SalesCertColumns"/>
+		FROM t01_sales_cert a
+		<include refid="t01SalesCertJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t01_sales_cert(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			proc_ins_id,
+			comp_id,
+			sales_name,
+			id_type,
+			id_nbr,
+			sales_area,
+			sales_scop,
+			sales_cert_nbr,
+			effec_date,
+			valid_date,
+			appr_stat,
+			attachment,
+			cert_stat
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{procInsId},
+			#{comp.id},
+			#{salesName},
+			#{idType},
+			#{idNbr},
+			#{salesArea},
+			#{salesScop},
+			#{salesCertNbr},
+			#{effecDate},
+			#{validDate},
+			#{apprStat},
+			#{attachment},
+			#{certStat}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t01_sales_cert SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			proc_ins_id = #{procInsId},
+			comp_id = #{comp.id},
+			sales_name = #{salesName},
+			id_type = #{idType},
+			id_nbr = #{idNbr},
+			sales_area = #{salesArea},
+			sales_scop = #{salesScop},
+			sales_cert_nbr = #{salesCertNbr},
+			effec_date = #{effecDate},
+			valid_date = #{validDate},
+			appr_stat = #{apprStat},
+			attachment = #{attachment},
+			cert_stat = #{certStat}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t01_sales_cert SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<select id="findSelectedList" resultType="T01SalesCert">
+		SELECT
+		<include refid="t01SalesCertColumns">
+			<property name="alias" value="a"/>
+			<property name="prefix" value=""/>
+		</include>,
+		<include refid="com.thinkgem.jeesite.modules.gsp.dao.t01compinfo.T01CompInfoDao.t01CompInfoColumns">
+			<property name="alias" value="b"/>
+			<property name="prefix" value="comp."/>
+		</include>
+		FROM t01_sales_cert a
+		<include refid="t01SalesCertJoins"/>
+		WHERE a.id in
+		<foreach collection="list" index="index" item="item" open="("
+				 separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<update id="replaceCompId">
+		update t01_sales_cert set comp_id= #{0} where comp_id= #{1}  and del_flag='0'
+	</update>
+	
+</mapper>

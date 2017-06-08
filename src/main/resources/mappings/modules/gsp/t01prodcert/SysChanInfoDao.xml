@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t01prodcert.SysChanInfoDao">
+    
+	<sql id="sysChanInfoColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.proc_ins_id AS "procInsId",
+		a.chan_tbl AS "chanTbl",
+		a.chan_col AS "chanCol",
+		a.chan_orig_id AS "chanOrigId",
+		a.chan_id AS "chanId.id",
+		a.chan_type AS "chanType",
+		a.orgi_value AS "orgiValue",
+		a.chan_value AS "chanValue",
+		a.chan_reason AS "chanReason"
+	</sql>
+	
+	<sql id="sysChanInfoJoins">
+		LEFT JOIN t01_prod_cert b ON b.id = a.chan_id
+	</sql>
+    
+	<select id="get" resultType="SysChanInfo">
+		SELECT 
+			<include refid="sysChanInfoColumns"/>
+		FROM sys_chan_info a
+		<include refid="sysChanInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SysChanInfo">
+		SELECT 
+			<include refid="sysChanInfoColumns"/>
+		FROM sys_chan_info a
+		<include refid="sysChanInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+				AND a.update_by = #{updateBy.id}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+			<if test="delFlag != null and delFlag != ''">
+				AND a.del_flag = #{delFlag}
+			</if>
+			<if test="procInsId != null and procInsId != ''">
+				AND a.proc_ins_id = #{procInsId}
+			</if>
+			<if test="chanTbl != null and chanTbl != ''">
+				AND a.chan_tbl = #{chanTbl}
+			</if>
+			<if test="chanCol != null and chanCol != ''">
+				AND a.chan_col = #{chanCol}
+			</if>
+			<if test="chanOrigId != null and chanOrigId != ''">
+				AND a.chan_orig_id = #{chanOrigId}
+			</if>
+			<if test="chanId != null and chanId.id != null and chanId.id != ''">
+				AND a.chan_id = #{chanId.id}
+			</if>
+			<if test="chanType != null and chanType != ''">
+				AND a.chan_type = #{chanType}
+			</if>
+			<if test="orgiValue != null and orgiValue != ''">
+				AND a.orgi_value = #{orgiValue}
+			</if>
+			<if test="chanValue != null and chanValue != ''">
+				AND a.chan_value = #{chanValue}
+			</if>
+			<if test="chanReason != null and chanReason != ''">
+				AND a.chan_reason = #{chanReason}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SysChanInfo">
+		SELECT 
+			<include refid="sysChanInfoColumns"/>
+		FROM sys_chan_info a
+		<include refid="sysChanInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sys_chan_info(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			proc_ins_id,
+			chan_tbl,
+			chan_col,
+			chan_orig_id,
+			chan_id,
+			chan_type,
+			orgi_value,
+			chan_value,
+			chan_reason
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{procInsId},
+			#{chanTbl},
+			#{chanCol},
+			#{chanOrigId},
+			#{chanId.id},
+			#{chanType},
+			#{orgiValue},
+			#{chanValue},
+			#{chanReason}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sys_chan_info SET 	
+			chan_col = #{chanCol},
+			chan_value = #{chanValue},
+			chan_reason = #{chanReason}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE sys_chan_info SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		<choose>
+			<when test="id !=null and id != ''">
+				WHERE id = #{id}
+			</when>
+			<otherwise>
+				WHERE chan_id = #{chanId.id}
+			</otherwise>
+		</choose>
+	</update>
+	
+</mapper>

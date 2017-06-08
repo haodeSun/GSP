@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="450px" height="440px" viewBox="0 0 450 440" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 40.3 (33839) - http://www.bohemiancoding.com/sketch -->
+    <title>登录页-登录框BG</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="1-1-登录页" transform="translate(-458.000000, -164.000000)">
+            <g id="主体" transform="translate(458.000000, 164.000000)">
+                <g id="登录页-登录框BG">
+                    <rect id="Rectangle" fill="#2D353C" opacity="0.400000006" x="0" y="0" width="450" height="440" rx="4"></rect>
+                    <g id="文字" transform="translate(40.000000, 38.000000)" fill="#FFFFFF" font-weight="normal">
+                        <text id="医疗器械经营合规管理系统" font-family="MicrosoftYaHei, Microsoft YaHei" font-size="22" line-spacing="22">
+                            <tspan x="0" y="23">医疗器械经营合规管理系统</tspan>
+                        </text>
+                        <text id="Regulatory-.Quality" font-family="ArialMT, Arial" font-size="12" line-spacing="12">
+                            <tspan x="1" y="40">Regulatory .Quality .Supply Management System </tspan>
+                        </text>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

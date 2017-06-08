@@ -1,0 +1,14 @@
+"TestCase","Key Word","Argument 1","Argument 2"
+,"loadSahi","function.sah"
+,"dataExcel=","_readCSVFile(""data.csv"")"
+
+
+"Create  Key Word","[CreateKeyword]","searchByOneInputConditionKW"
+,"[Arguments]","$type","$condition","$inputValue","$resultCount","$resultValue"
+,"searchByOneInputCondition","$type","$condition","$inputValue","$resultCount","$resultValue"
+
+
+"My First Testcase","[Documentation]","My testcase description. Modify as needed"
+,"login","[dataExcel:login:username]","[dataExcel:login:password]"
+,"[Keyword]","searchByOneInputConditionKW"
+,"[Data]","[dataExcel:searchByOneInputCondition:type]","[dataExcel:searchByOneInputCondition:condition]","[dataExcel:searchByOneInputCondition:inputValue]","[dataExcel:searchByOneInputCondition:resultCount]","[dataExcel:searchByOneInputCondition:resultValue]"

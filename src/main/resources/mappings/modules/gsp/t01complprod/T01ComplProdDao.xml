@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t01complprod.T01ComplProdDao">
+    
+	<sql id="t01ComplProdColumns">
+		a.id AS "complProdCertId",
+		compl_prod.matr_id AS "matrId",
+		compl_prod.id AS "id",
+		prod_cert.regi_cert_nbr AS "regiCertNbr",
+		prod_cert.orig_regi_cert_nbr AS "origRegiCertNbr",
+		prod_cert.risk_class AS "riskClass",
+		prod_cert.tech_cate_cd AS "techCateCd",
+		prod_cert.effe_date AS "effeDate",
+		prod_cert.valid_peri AS "validPeri",
+		prod_cert.cert_stat AS "certStat",
+		prod_cert.cert_type AS "certType",
+		matr.matr_nbr AS "matrNbr",
+		matr.matr_nm_cn AS "matrNmCn",
+		matr.matr_nm_en AS "matrNmEn",
+		matr.matr_desc AS "matrDesc",
+		matr.matr_type AS "matrType",
+		compl_prod.stor_temp AS "storTemp",
+		compl_prod.stor_wet AS "storWet",
+		compl_prod.tran_temp AS "tranTemp",
+		compl_prod.tran_wet AS "tranWet",
+		compl_prod.stor_temp2 AS "storTemp2",
+		compl_prod.stor_wet2 AS "storWet2",
+		compl_prod.tran_temp2 AS "tranTemp2",
+		compl_prod.tran_wet2 AS "tranWet2",
+		compl_prod.mart_unit AS "martUnit",
+		matr.price_unit AS "priceUnit",
+		matr.matr_price AS "matrPrice",
+		compl_prod.spec_type AS "specType",
+		compl_prod.valid_months AS "validMonths",
+		compl_prod.remarks AS "remarks",
+		compl_prod.compl_prod_stat AS "complProdStat",
+		compl_prod.appr_stat AS "apprStat",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		compl_prod.update_date AS "updateDate",
+		a.del_flag AS "delFlag",
+		a.proc_ins_id AS "procInsId",
+		a.freeze_flag AS "freezeFlag"
+	</sql>
+	<sql id="t01ComplProdColumnsNoProdCert">
+		compl_prod.id AS "id",
+		matr.id AS "matrId",
+		matr.matr_nbr AS "matrNbr",
+		matr.matr_nm_cn AS "matrNmCn",
+		matr.matr_nm_en AS "matrNmEn",
+		matr.matr_desc AS "matrDesc",
+		matr.matr_type AS "matrType",
+		compl_prod.stor_temp AS "storTemp",
+		compl_prod.stor_wet AS "storWet",
+		compl_prod.tran_temp AS "tranTemp",
+		compl_prod.tran_wet AS "tranWet",
+		compl_prod.stor_temp2 AS "storTemp2",
+		compl_prod.stor_wet2 AS "storWet2",
+		compl_prod.tran_temp2 AS "tranTemp2",
+		compl_prod.tran_wet2 AS "tranWet2",
+		compl_prod.mart_unit AS "martUnit",
+		matr.price_unit AS "priceUnit",
+		matr.matr_price AS "matrPrice",
+		compl_prod.spec_type AS "specType",
+		compl_prod.valid_months AS "validMonths",
+		compl_prod.remarks AS "remarks",
+		compl_prod.compl_prod_stat AS "complProdStat",
+		compl_prod.appr_stat AS "apprStat",
+		compl_prod.create_by AS "createBy.id",
+		compl_prod.create_date AS "createDate",
+		compl_prod.update_by AS "updateBy.id",
+		compl_prod.update_date AS "updateDate",
+		compl_prod.del_flag AS "delFlag",
+		compl_prod.proc_ins_id AS "procInsId"
+	</sql>
+
+	<sql id="t01ComplProdJoins">
+		LEFT JOIN t01_compl_prod AS compl_prod ON compl_prod.id=a.compl_prod_id
+		LEFT JOIN t01_matr_info AS matr ON matr.id=compl_prod.matr_id
+		LEFT JOIN t01_prod_cert AS prod_cert ON prod_cert.id=a.prod_cert_id
+	</sql>
+    
+	<select id="get" resultType="T01ComplProd">
+		SELECT 
+			<include refid="t01ComplProdColumnsNoProdCert"/>
+		FROM t01_compl_prod compl_prod
+		LEFT JOIN t01_matr_info AS matr ON matr.id=compl_prod.matr_id
+		WHERE compl_prod.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="T01ComplProd">
+		SELECT 
+			<include refid="t01ComplProdColumns"/>
+		FROM t01_compl_prod_cert a
+		<include refid="t01ComplProdJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND compl_prod.del_flag = #{DEL_FLAG_NORMAL}
+			AND matr.del_flag = #{DEL_FLAG_NORMAL}
+			AND prod_cert.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="regiCertNbr != null and regiCertNbr != ''">
+				AND prod_cert.regi_cert_nbr LIKE
+					<if test="dbName == 'oracle'">'%'||#{regiCertNbr}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{regiCertNbr}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{regiCertNbr},'%')</if>
+			</if>
+			<if test="origRegiCertNbr != null and origRegiCertNbr != ''">
+				AND prod_cert.orig_regi_cert_nbr LIKE
+					<if test="dbName == 'oracle'">'%'||#{origRegiCertNbr}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{origRegiCertNbr}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{origRegiCertNbr},'%')</if>
+			</if>
+			<if test="riskClass != null and riskClass != ''">
+				AND prod_cert.risk_class = #{riskClass}
+			</if>
+			<if test="techCateCd != null and techCateCd != ''">
+				AND prod_cert.tech_cate_cd = #{techCateCd}
+			</if>
+			<if test="effeDate != null">
+				AND  date_format(prod_cert.effe_date,'%Y-%m-%d')= date_format(#{effeDate},'%Y-%m-%d')
+			</if>
+			<if test="validPeri != null">
+				AND  date_format(prod_cert.valid_peri,'%Y-%m-%d')= date_format(#{validPeri},'%Y-%m-%d')
+			</if>
+			<if test="certStat != null and certStat != ''">
+				AND prod_cert.cert_stat = #{certStat}
+			</if>
+			<if test="certType != null and certType != ''">
+				AND prod_cert.cert_type = #{certType}
+			</if>
+			<if test="matrId != null and matrId != ''">
+				AND compl_prod.matr_id = #{matrId}
+			</if>
+			<if test="matrNbr != null and matrNbr != ''">
+				AND matr.matr_nbr LIKE
+					<if test="dbName == 'oracle'">'%'||#{matrNbr}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{matrNbr}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{matrNbr},'%')</if>
+			</if>
+			<if test="matrNmCn != null and matrNmCn != ''">
+				AND matr.matr_nm_cn LIKE
+					<if test="dbName == 'oracle'">'%'||#{matrNmCn}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{matrNmCn}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{matrNmCn},'%')</if>
+			</if>
+			<if test="matrNmEn != null and matrNmEn != ''">
+				AND matr.matr_nm_en LIKE
+					<if test="dbName == 'oracle'">'%'||#{matrNmEn}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{matrNmEn}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{matrNmEn},'%')</if>
+			</if>
+			<if test="matrDesc != null and matrDesc != ''">
+				AND matr.matr_desc LIKE
+					<if test="dbName == 'oracle'">'%'||#{matrDesc}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{matrDesc}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{matrDesc},'%')</if>
+			</if>
+			<if test="matrType != null and matrType != ''">
+				AND matr.matr_type = #{matrType}
+			</if>
+			<if test="beginStorTemp != null and endStorTemp != null and beginStorTemp != '' and endStorTemp != ''">
+				AND compl_prod.stor_temp &lt;= #{endStorTemp}
+				AND compl_prod.stor_temp2 &gt;= #{beginStorTemp}
+			</if>
+			<if test="beginStorWet != null and endStorWet != null and beginStorWet != '' and endStorWet != ''">
+				AND compl_prod.stor_wet &lt;= #{endStorWet}
+				AND compl_prod.stor_wet2 &gt;= #{beginStorWet}
+			</if>
+			<if test="beginTranTemp != null and endTranTemp != null and beginTranTemp != '' and endTranTemp != ''">
+				AND compl_prod.tran_temp &lt;= #{endTranTemp}
+				AND compl_prod.tran_temp2 &gt;= #{beginTranTemp}
+			</if>
+			<if test="beginTranWet != null and endTranWet != null and beginTranWet != '' and endTranWet != ''">
+				AND compl_prod.tran_wet &lt;= #{endTranWet}
+				AND compl_prod.tran_wet2 &gt;= #{beginTranWet}
+			</if>
+			<if test="martUnit != null and martUnit != ''">
+				AND compl_prod.mart_unit LIKE
+					<if test="dbName == 'oracle'">'%'||#{martUnit}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{martUnit}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{martUnit},'%')</if>
+			</if>
+			<if test="priceUnit != null and priceUnit != ''">
+				AND matr.price_unit LIKE
+					<if test="dbName == 'oracle'">'%'||#{priceUnit}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{priceUnit}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{priceUnit},'%')</if>
+			</if>
+			<if test="matrPrice != null and matrPrice != ''">
+				AND matr.matr_price LIKE
+					<if test="dbName == 'oracle'">'%'||#{matrPrice}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{matrPrice}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{matrPrice},'%')</if>
+			</if>
+			<if test="specType != null and specType != ''">
+				AND compl_prod.spec_type LIKE
+					<if test="dbName == 'oracle'">'%'||#{specType}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{specType}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{specType},'%')</if>
+			</if>
+			<if test="validMonths != null and validMonths != ''">
+				AND compl_prod.valid_months = #{validMonths}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND compl_prod.remarks LIKE
+					<if test="dbName == 'oracle'">'%'||#{remarks}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{remarks}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{remarks},'%')</if>
+			</if>
+			<if test="complProdStat != null and complProdStat != '' and complProdStat != '3'.toString()">
+				AND prod_cert.cert_stat = #{complProdStat}
+				AND a.freeze_flag = '0'
+			</if>
+			<if test="complProdStat != null and complProdStat != '' and complProdStat == '3'.toString()">
+				AND a.freeze_flag = '1'
+			</if>
+			<if test="apprStat != null and apprStat != ''">
+				AND compl_prod.appr_stat = #{apprStat}
+			</if>
+			<if test="updateDate != null">
+				AND  date_format(compl_prod.update_date,'%Y-%m-%d')= date_format(#{updateDate},'%Y-%m-%d')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY (CASE WHEN compl_prod.appr_stat='0' THEN 1
+				WHEN compl_prod.appr_stat='1' THEN 2
+				WHEN compl_prod.appr_stat='3' THEN 3
+				WHEN compl_prod.appr_stat='2' THEN 4 END),
+				a.update_date
+				DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="T01ComplProd">
+		SELECT 
+			<include refid="t01ComplProdColumns"/>
+		FROM t01_compl_prod a
+		<include refid="t01ComplProdJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO t01_compl_prod(
+		id,
+		create_by,
+		create_date,
+		update_by,
+		update_date,
+		remarks,
+		del_flag,
+		proc_ins_id,
+		matr_id,
+		compl_prod_stat,
+		appr_stat,
+		mart_unit,
+		spec_type,
+		stor_temp,
+		stor_wet,
+		tran_temp,
+		tran_wet,
+		stor_temp2,
+		stor_wet2,
+		tran_temp2,
+		tran_wet2,
+		valid_months
+		) VALUES (
+		#{id},
+		#{createBy.id},
+		#{createDate},
+		#{updateBy.id},
+		#{updateDate},
+		#{remarks},
+		#{delFlag},
+		#{procInsId},
+		#{matrId},
+		#{complProdStat},
+		#{apprStat},
+		#{martUnit},
+		#{specType},
+		#{storTemp},
+		#{storWet},
+		#{tranTemp},
+		#{tranWet},
+		#{storTemp2},
+		#{storWet2},
+		#{tranTemp2},
+		#{tranWet2},
+		#{validMonths}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t01_compl_prod SET
+		update_by = #{updateBy.id},
+		update_date = #{updateDate},
+		remarks = #{remarks},
+		proc_ins_id = #{procInsId},
+		matr_id = #{matrId},
+		compl_prod_stat = #{complProdStat},
+		appr_stat = #{apprStat},
+		mart_unit = #{martUnit},
+		spec_type = #{specType},
+		stor_temp = #{storTemp},
+		stor_wet = #{storWet},
+		tran_temp = #{tranTemp},
+		tran_wet = #{tranWet},
+		stor_temp2 = #{storTemp2},
+		stor_wet2 = #{storWet2},
+		tran_temp2 = #{tranTemp2},
+		tran_wet2 = #{tranWet2},
+		valid_months = #{validMonths}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t01_compl_prod SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

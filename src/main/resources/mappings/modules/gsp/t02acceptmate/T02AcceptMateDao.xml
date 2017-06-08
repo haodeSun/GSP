@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t02acceptmate.T02AcceptMateDao">
+    
+	<sql id="t02AcceptMateColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.proc_ins_id AS "procInsId",
+		a.mate_no AS "mateNo",
+		a.prod_name_cn AS "prodNameCn",
+		a.regi_cert_no AS "regiCertNo",
+		a.batch_numb AS "batchNumb",
+		a.manu_date AS "manuDate",
+		a.disa_date AS "disaDate",
+		a.vali_peri AS "valiPeri",
+		a.manu_ente AS "manuEnte",
+		a.supplier AS "supplier",
+		a.rece_quan AS "receQuan",
+		a.acce_numb AS "acceNumb",
+		a.check_resu AS "checkResu",
+		a.unqu_numb AS "unquNumb",
+		a.unqu_hand_meas AS "unquHandMeas"
+	</sql>
+	
+	<sql id="t02AcceptMateJoins">
+	</sql>
+    
+	<select id="get" resultType="T02AcceptMate">
+		SELECT 
+			<include refid="t02AcceptMateColumns"/>
+		FROM t02_accept_mate a
+		<include refid="t02AcceptMateJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="T02AcceptMate">
+		SELECT 
+			<include refid="t02AcceptMateColumns"/>
+		FROM t02_accept_mate a
+		<include refid="t02AcceptMateJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+				AND a.update_by = #{updateBy.id}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+			<if test="procInsId != null and procInsId != ''">
+				AND a.proc_ins_id = #{procInsId}
+			</if>
+			<if test="mateNo != null and mateNo != ''">
+				AND a.mate_no = #{mateNo}
+			</if>
+			<if test="prodNameCn != null and prodNameCn != ''">
+				AND a.prod_name_cn = #{prodNameCn}
+			</if>
+			<if test="regiCertNo != null and regiCertNo != ''">
+				AND a.regi_cert_no = #{regiCertNo}
+			</if>
+			<if test="batchNumb != null and batchNumb != ''">
+				AND a.batch_numb = #{batchNumb}
+			</if>
+			<if test="manuDate != null and manuDate != ''">
+				AND a.manu_date = #{manuDate}
+			</if>
+			<if test="disaDate != null and disaDate != ''">
+				AND a.disa_date = #{disaDate}
+			</if>
+			<if test="valiPeri != null and valiPeri != ''">
+				AND a.vali_peri = #{valiPeri}
+			</if>
+			<if test="manuEnte != null and manuEnte != ''">
+				AND a.manu_ente = #{manuEnte}
+			</if>
+			<if test="supplier != null and supplier != ''">
+				AND a.supplier = #{supplier}
+			</if>
+			<if test="receQuan != null and receQuan != ''">
+				AND a.rece_quan = #{receQuan}
+			</if>
+			<if test="acceNumb != null and acceNumb != ''">
+				AND a.acce_numb = #{acceNumb}
+			</if>
+			<if test="checkResu != null and checkResu != ''">
+				AND a.check_resu = #{checkResu}
+			</if>
+			<if test="unquNumb != null and unquNumb != ''">
+				AND a.unqu_numb = #{unquNumb}
+			</if>
+			<if test="unquHandMeas != null and unquHandMeas != ''">
+				AND a.unqu_hand_meas = #{unquHandMeas}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="T02AcceptMate">
+		SELECT 
+			<include refid="t02AcceptMateColumns"/>
+		FROM t02_accept_mate a
+		<include refid="t02AcceptMateJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t02_accept_mate(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			proc_ins_id,
+			mate_no,
+			prod_name_cn,
+			regi_cert_no,
+			batch_numb,
+			manu_date,
+			disa_date,
+			vali_peri,
+			manu_ente,
+			supplier,
+			rece_quan,
+			acce_numb,
+			check_resu,
+			unqu_numb,
+			unqu_hand_meas
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{procInsId},
+			#{mateNo},
+			#{prodNameCn},
+			#{regiCertNo},
+			#{batchNumb},
+			#{manuDate},
+			#{disaDate},
+			#{valiPeri},
+			#{manuEnte},
+			#{supplier},
+			#{receQuan},
+			#{acceNumb},
+			#{checkResu},
+			#{unquNumb},
+			#{unquHandMeas}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t02_accept_mate SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			proc_ins_id = #{procInsId},
+			mate_no = #{mateNo},
+			prod_name_cn = #{prodNameCn},
+			regi_cert_no = #{regiCertNo},
+			batch_numb = #{batchNumb},
+			manu_date = #{manuDate},
+			disa_date = #{disaDate},
+			vali_peri = #{valiPeri},
+			manu_ente = #{manuEnte},
+			supplier = #{supplier},
+			rece_quan = #{receQuan},
+			acce_numb = #{acceNumb},
+			check_resu = #{checkResu},
+			unqu_numb = #{unquNumb},
+			unqu_hand_meas = #{unquHandMeas}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t02_accept_mate SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

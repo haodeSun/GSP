@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+	<name>service</name>
+	<filePath>src/main/java/${packageName}/${moduleName}/service/${subModuleName}</filePath>
+	<fileName>${ClassName}Service.java</fileName>
+	<content><![CDATA[
+/*
+ * Copyright &copy; 2012-2016 <a href="https://github.com/thinkgem/jeesite">JeeSite</a> All rights reserved.
+ */
+package ${packageName}.${moduleName}.service<#if subModuleName != "">.${subModuleName}</#if>;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.thinkgem.jeesite.common.persistence.Page;
+import com.thinkgem.jeesite.common.service.BusinessService;
+import com.thinkgem.jeesite.common.service.ExtCrudService;
+import com.thinkgem.jeesite.modules.gsp.service.exception.BusinessException;
+import com.thinkgem.jeesite.common.utils.StringUtils;
+import ${packageName}.${moduleName}.entity<#if subModuleName != "">.${subModuleName}</#if>.${ClassName};
+import ${packageName}.${moduleName}.dao<#if subModuleName != "">.${subModuleName}</#if>.${ClassName}Dao;
+<#list table.childList as c>
+import ${packageName}.${moduleName}.entity<#if subModuleName != "">.${subModuleName}</#if>.${c.className?cap_first};
+import ${packageName}.${moduleName}.dao<#if subModuleName != "">.${subModuleName}</#if>.${c.className?cap_first}Dao;
+</#list>
+
+/**
+ * ${functionName}Service
+ * @author ${functionAuthor}
+ * @version ${functionVersion}
+ */
+<#if !extended?? || !extended >
+@Service
+</#if>
+@Transactional(readOnly = true)
+public class ${ClassName}Service extends ExtCrudService<${ClassName}Dao, ${ClassName}> {
+
+	@SuppressWarnings({"MismatchedQueryAndUpdateOfCollection", "SpringAutowiredFieldsWarningInspection"})
+	@Autowired(required = false)
+	private List<BusinessService<${ClassName}>> businessServices = new ArrayList<>();
+
+	<#list table.childList as c>
+	private ${c.className?cap_first}Dao ${c.className?uncap_first}Dao;
+	</#list>
+
+    @Autowired
+    public ${ClassName}Service(
+            ${ClassName}Dao dao <#list table.childList as c>,
+            ${c.className?cap_first}Dao ${c.className}Dao
+            </#list>
+            ) {
+        super(dao);
+        <#list table.childList as c>
+            this.${c.className?uncap_first}Dao = ${c.className}Dao;
+        </#list>
+    }
+
+	public ${ClassName} get(String id) {
+		//执行保存前的业务代码
+		for(BusinessService<${ClassName}> businessService : businessServices){
+			businessService.preFetch(id);
+		}
+		${ClassName} ${className} = super.get(id);
+		<#list table.childList as c>
+		${className}.set${c.className?cap_first}List(${c.className?uncap_first}Dao.findList(new ${c.className?cap_first}(${className})));
+		</#list>
+		//执行保存后的业务代码
+		for(BusinessService<${ClassName}> businessService : businessServices){
+			 businessService.postFetch(${className});
+		}
+		return ${className};
+	}
+	
+	public List<${ClassName}> findList(${ClassName} ${className}) {
+		return super.findList(${className});
+	}
+	
+	public Page<${ClassName}> findPage(Page<${ClassName}> page, ${ClassName} ${className}) {
+		//执行保存前的业务代码
+		for(BusinessService<${ClassName}> businessService : businessServices){
+			 businessService.prePaging(page,${className});
+		}
+		Page<${ClassName}> paginator = super.findPage(page, ${className});
+		//执行保存后的业务代码
+		for(BusinessService<${ClassName}> businessService : businessServices){
+			businessService.postPaging(paginator);
+		}
+		return paginator;
+	}
+	
+	@Transactional
+	public void save(${ClassName} ${className}) throws BusinessException {
+		boolean isNewRecord = ${className}.getIsNewRecord();
+		//执行保存前的业务代码
+		for(BusinessService<${ClassName}> businessService : businessServices){
+			if(!isNewRecord){
+				businessService.preUpdate(${className});
+			}else{
+				businessService.preInsert(${className});
+			}
+		}
+		super.save(${className});
+	<#list table.childList as c>
+		${className}.get${c.className?cap_first}List()
+		            .stream()
+		            .filter( ${c.className?uncap_first} -> ${c.className?uncap_first}.getId() != null )
+		            .forEach( ${c.className?uncap_first} -> {
+			            if (${c.className?cap_first}.DEL_FLAG_NORMAL.equals(${c.className?uncap_first}.getDelFlag())){
+				            if (StringUtils.isBlank(${c.className?uncap_first}.getId())){
+					<#if c.parentExists>
+			            <#list c.columnList as cc>
+				            <#if c.parentTableFk == cc.name>
+				                ${c.className?uncap_first}.set${cc.simpleJavaField?cap_first}(${className});
+							</#if>
+   			            </#list>
+		            </#if>
+	                            ${c.className?uncap_first}.preInsert();
+					            ${c.className?uncap_first}Dao.insert(${c.className?uncap_first});
+				            }else{
+					            ${c.className?uncap_first}.preUpdate();
+					            ${c.className?uncap_first}Dao.update(${c.className?uncap_first});
+				            }
+			            } else {
+				                ${c.className?uncap_first}Dao.delete(${c.className?uncap_first});
+			            }
+		            });
+	</#list>
+		//执行保存后的业务代码
+		for(BusinessService<${ClassName}> businessService : businessServices){
+			if(!isNewRecord){
+				businessService.postUpdate(${className});
+			}else{
+				businessService.postInsert(${className});
+			}
+		}
+	}
+	
+	@Transactional
+	public void delete(${ClassName} ${className}) {
+		//执行保存前的业务代码
+		for(BusinessService<${ClassName}> businessService : businessServices){
+			businessService.preDelete(${className});
+		}
+		//删除
+		super.delete(${className});
+	<#list table.childList as c>
+		${c.className?uncap_first}Dao.delete(new ${c.className?cap_first}(${className}));
+	</#list>
+		//执行保存前的业务代码
+		for(BusinessService<${ClassName}> businessService : businessServices){
+			businessService.postDelete(${className});
+		}
+	}
+	
+}]]>
+	</content>
+</template>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="8px" height="4px" viewBox="0 0 8 4" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 40.3 (33839) - http://www.bohemiancoding.com/sketch -->
+    <title>下拉菜单-三角icon</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="0-2-个人中心下拉菜单" transform="translate(-1276.000000, -24.000000)" fill="#969696">
+            <g id="header">
+                <g id="人名" transform="translate(1200.000000, 19.000000)">
+                    <path d="M79.6450267,5.35497332 C79.841073,5.15892697 80.1519203,5.15192032 80.3549733,5.35497332 L83.6450267,8.64502668 C83.841073,8.84107303 83.7692032,9 83.4995642,9 L76.5004358,9 C76.2240528,9 76.1519203,8.84807968 76.3549733,8.64502668 L79.6450267,5.35497332 Z" id="下拉菜单-三角icon" transform="translate(80.000000, 7.000000) scale(1, -1) translate(-80.000000, -7.000000) "></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

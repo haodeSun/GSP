@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t02stocktaking.T02StocktakingDao">
+    
+	<sql id="t02StocktakingColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.proc_ins_id AS "procInsId",
+		a.warehouse AS "warehouse",
+		a.qual_stat AS "qualStat",
+		a.inve_count AS "inveCount",
+		a.inve_name AS "inveName",
+		a.orga_code AS "orgaCode",
+		a.ware_code AS "wareCode",
+		a.inve_date AS "inveDate",
+		a.near_days AS "nearDays",
+		a.manu_code AS "manuCode",
+		a.cate_code AS "cateCode",
+		a.brand_code AS "brandCode",
+		a.comments AS "comments",
+		a.sales_start_date AS "salesStartDate",
+		a.sales_end_date AS "salesEndDate",
+		a.near_good AS "nearGood"
+	</sql>
+	
+	<sql id="t02StocktakingJoins">
+	</sql>
+    
+	<select id="get" resultType="T02Stocktaking">
+		SELECT 
+			<include refid="t02StocktakingColumns"/>
+		FROM t02_stocktaking a
+		<include refid="t02StocktakingJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="T02Stocktaking">
+		SELECT 
+			<include refid="t02StocktakingColumns"/>
+		FROM t02_stocktaking a
+		<include refid="t02StocktakingJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+				AND a.update_by = #{updateBy.id}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+			<if test="procInsId != null and procInsId != ''">
+				AND a.proc_ins_id = #{procInsId}
+			</if>
+			<if test="warehouse != null and warehouse != ''">
+				AND a.warehouse = #{warehouse}
+			</if>
+			<if test="qualStat != null and qualStat != ''">
+				AND a.qual_stat = #{qualStat}
+			</if>
+			<if test="inveCount != null and inveCount != ''">
+				AND a.inve_count = #{inveCount}
+			</if>
+			<if test="inveName != null and inveName != ''">
+				AND a.inve_name = #{inveName}
+			</if>
+			<if test="orgaCode != null and orgaCode != ''">
+				AND a.orga_code = #{orgaCode}
+			</if>
+			<if test="wareCode != null and wareCode != ''">
+				AND a.ware_code = #{wareCode}
+			</if>
+			<if test="inveDate != null and inveDate != ''">
+				AND a.inve_date = #{inveDate}
+			</if>
+			<if test="nearDays != null and nearDays != ''">
+				AND a.near_days = #{nearDays}
+			</if>
+			<if test="manuCode != null and manuCode != ''">
+				AND a.manu_code = #{manuCode}
+			</if>
+			<if test="cateCode != null and cateCode != ''">
+				AND a.cate_code = #{cateCode}
+			</if>
+			<if test="brandCode != null and brandCode != ''">
+				AND a.brand_code = #{brandCode}
+			</if>
+			<if test="comments != null and comments != ''">
+				AND a.comments = #{comments}
+			</if>
+			<if test="salesStartDate != null and salesStartDate != ''">
+				AND a.sales_start_date = #{salesStartDate}
+			</if>
+			<if test="salesEndDate != null and salesEndDate != ''">
+				AND a.sales_end_date = #{salesEndDate}
+			</if>
+			<if test="nearGood != null and nearGood != ''">
+				AND a.near_good = #{nearGood}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="T02Stocktaking">
+		SELECT 
+			<include refid="t02StocktakingColumns"/>
+		FROM t02_stocktaking a
+		<include refid="t02StocktakingJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t02_stocktaking(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			proc_ins_id,
+			warehouse,
+			qual_stat,
+			inve_count,
+			inve_name,
+			orga_code,
+			ware_code,
+			inve_date,
+			near_days,
+			manu_code,
+			cate_code,
+			brand_code,
+			comments,
+			sales_start_date,
+			sales_end_date,
+			near_good
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{procInsId},
+			#{warehouse},
+			#{qualStat},
+			#{inveCount},
+			#{inveName},
+			#{orgaCode},
+			#{wareCode},
+			#{inveDate},
+			#{nearDays},
+			#{manuCode},
+			#{cateCode},
+			#{brandCode},
+			#{comments},
+			#{salesStartDate},
+			#{salesEndDate},
+			#{nearGood}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t02_stocktaking SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			proc_ins_id = #{procInsId},
+			warehouse = #{warehouse},
+			qual_stat = #{qualStat},
+			inve_count = #{inveCount},
+			inve_name = #{inveName},
+			orga_code = #{orgaCode},
+			ware_code = #{wareCode},
+			inve_date = #{inveDate},
+			near_days = #{nearDays},
+			manu_code = #{manuCode},
+			cate_code = #{cateCode},
+			brand_code = #{brandCode},
+			comments = #{comments},
+			sales_start_date = #{salesStartDate},
+			sales_end_date = #{salesEndDate},
+			near_good = #{nearGood}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t02_stocktaking SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

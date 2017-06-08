@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t01operatehist.T01OperateHistDao">
+    
+	<sql id="t01OperateHistColumns">
+		a.id AS "id",
+		a.module AS "module",
+		a.dataId AS "dataId",
+		a.operate_type AS "operateType",
+		a.description AS "description",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		updateUser.login_name AS "updateBy.loginName"
+	</sql>
+	
+	<sql id="t01OperateHistJoins">
+		LEFT JOIN  sys_user as updateUser on a.update_by=updateUser.id
+	</sql>
+    
+	<select id="get" resultType="T01OperateHist">
+		SELECT 
+			<include refid="t01OperateHistColumns"/>
+		FROM t01_operate_hist a
+		<include refid="t01OperateHistJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="T01OperateHist">
+		SELECT 
+			<include refid="t01OperateHistColumns"/>
+		FROM t01_operate_hist a
+		<include refid="t01OperateHistJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="module != null and module != ''">
+				AND a.module = #{module}
+			</if>
+			<if test="dataId != null and dataId != ''">
+				AND a.dataId = #{dataId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findFreezeAndUnfreezeList" resultType="T01OperateHist">
+		SELECT
+		<include refid="t01OperateHistColumns"/>
+		FROM t01_operate_hist a
+		<include refid="t01OperateHistJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.operate_type in('0','1')
+			<if test="module != null and module != ''">
+				AND a.module = #{module}
+			</if>
+			<if test="dataId != null and dataId != ''">
+				AND a.dataId = #{dataId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="T01OperateHist">
+		SELECT 
+			<include refid="t01OperateHistColumns"/>
+		FROM t01_operate_hist a
+		<include refid="t01OperateHistJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t01_operate_hist(
+			id,
+			module,
+			dataId,
+			operate_type,
+			description,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{module},
+			#{dataId},
+			#{operateType},
+			#{description},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t01_operate_hist SET 	
+			module = #{module},
+			dataId = #{dataId},
+			operate_type = #{operateType},
+			description = #{description},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t01_operate_hist SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateFreezeStatusById">
+		UPDATE ${param1} SET
+		update_by = #{param2.updateBy.id},
+		update_date = #{param2.updateDate},
+		freeze = #{param2.operateType}
+		WHERE id = #{param2.dataId}
+	</update>
+
+</mapper>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t01prodcert.T01ProdCertDao">
+    <!--获取历史纪录（无法获取变更或者延续之前的），考参数来区别获取的是  兄弟，当前记录之后的，还是所有的-->
+    <select id="getChildren" resultType="T01ProdCert">
+        SELECT
+        <include refid="t01ProdCertColumns"/>
+        FROM t01_prod_cert a
+        <where>
+            a.del_flag = '0'
+            AND regi_cert_nbrs like #{route}
+        </where>
+        ORDER BY a.update_date DESC
+    </select>
+
+    <!--获取历史纪录（仅仅可以获取当前记录的出处，也就是变更或者延续之前的记录）-->
+    <select id="getPreHistory" resultType="T01ProdCert">
+        SELECT
+        <include refid="t01ProdCertColumns"/>
+        FROM t01_prod_cert a
+        <where>
+            a.del_flag = '0'
+            AND id IN #{route}
+        </where>
+        ORDER BY a.update_date DESC
+    </select>
+
+    <select id="findChanList" resultType="T01ProdCert">
+        SELECT
+        <include refid="t01ProdCertColumns"/>
+        FROM t01_prod_cert a
+        <include refid="t01ProdCertJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="regiCertNbr != null and regiCertNbr != ''">
+                AND a.regi_cert_nbr = #{regiCertNbr}
+            </if>
+            <if test="origRegiCertNbr != null and origRegiCertNbr != ''">
+                AND a.orig_regi_cert_nbr = #{origRegiCertNbr}
+            </if>
+            <if test="riskClass != null and riskClass != ''">
+                AND a.risk_class = #{riskClass}
+            </if>
+            <if test="techCateCd != null and techCateCd != ''">
+                AND a.tech_cate_cd = #{techCateCd}
+            </if>
+            <if test="prodNameCn != null and prodNameCn != ''">
+                AND a.prod_name_cn = #{prodNameCn}
+            </if>
+            <if test="prodNameEn != null and prodNameEn != ''">
+                AND a.prod_name_en = #{prodNameEn}
+            </if>
+            <if test="isImport != null and isImport != ''">
+                AND a.is_import = #{isImport}
+            </if>
+            <if test="modelSpec != null and modelSpec != ''">
+                AND a.model_spec = #{modelSpec}
+            </if>
+            <if test="struComp != null and struComp != ''">
+                AND a.stru_comp = #{struComp}
+            </if>
+            <if test="mainMnt != null and mainMnt != ''">
+                AND a.main_mnt = #{mainMnt}
+            </if>
+            <if test="expeUsage != null and expeUsage != ''">
+                AND a.expe_usage = #{expeUsage}
+            </if>
+            <if test="useScope != null and useScope != ''">
+                AND a.use_scope = #{useScope}
+            </if>
+            <if test="effiDate != null and effiDate != ''">
+                AND a.effi_date = #{effiDate}
+            </if>
+            <if test="storCond != null and storCond != ''">
+                AND a.stor_cond = #{storCond}
+            </if>
+            <if test="tranCond != null and tranCond != ''">
+                AND a.tran_cond = #{tranCond}
+            </if>
+            <if test="regiPersName != null and regiPersName != ''">
+                AND a.regi_pers_name = #{regiPersName}
+            </if>
+            <if test="regiPersNameTran != null and regiPersNameTran != ''">
+                AND a.regi_pers_name_tran = #{regiPersNameTran}
+            </if>
+            <if test="regiPersAddr != null and regiPersAddr != ''">
+                AND a.regi_pers_addr = #{regiPersAddr}
+            </if>
+            <if test="regiPersCont != null and regiPersCont != ''">
+                AND a.regi_pers_cont = #{regiPersCont}
+            </if>
+            <if test="produAddr != null and produAddr != ''">
+                AND a.produ_addr = #{produAddr}
+            </if>
+            <if test="produAreaCn != null and produAreaCn != ''">
+                AND a.produ_area_cn = #{produAreaCn}
+            </if>
+            <if test="produAreaEn != null and produAreaEn != ''">
+                AND a.produ_area_en = #{produAreaEn}
+            </if>
+            <if test="produFactCn != null and produFactCn != ''">
+                AND a.produ_fact_cn = #{produFactCn}
+            </if>
+            <if test="agentName != null and agentName != ''">
+                AND a.agent_name = #{agentName}
+            </if>
+            <if test="agentAddr != null and agentAddr != ''">
+                AND a.agent_addr = #{agentAddr}
+            </if>
+            <if test="agentCont != null and agentCont != ''">
+                AND a.agent_cont = #{agentCont}
+            </if>
+            <if test="saledServOrg != null and saledServOrg != ''">
+                AND a.saled_serv_org = #{saledServOrg}
+            </if>
+            <if test="certType != null and certType != ''">
+                AND a.cert_type = #{certType}
+            </if>
+            <if test="certStat != null and certStat != ''">
+                AND a.cert_stat = #{certStat}
+            </if>
+            <if test="explanation != null and explanation != ''">
+                AND a.explanation = #{explanation}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+</mapper>

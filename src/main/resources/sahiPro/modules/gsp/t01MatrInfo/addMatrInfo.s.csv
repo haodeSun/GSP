@@ -1,0 +1,14 @@
+"TestCase","Key Word","Argument 1","Argument 2"
+,"loadSahi","function.sah"
+,"dataExcel=","_readCSVFile(""data.csv"")"
+
+
+"Create  Key Word addMatrInfoKW","[CreateKeyword]","addMatrInfoKW"
+,"[Arguments]","$matrNbr","$matrNmCn","$matrNmEn","$matrDesc","$matrType","$remarks","$priceUnit","$matrPrice"
+,"addMatrInfo","$matrNbr","$matrNmCn","$matrNmEn","$matrDesc","$matrType","$remarks","$priceUnit","$matrPrice"
+
+
+"My First Testcase","[Documentation]","My testcase description. Modify as needed"
+,"login","[dataExcel:login:username]","[dataExcel:login:password]"
+,"[Keyword]","addMatrInfoKW"
+,"[Data]","[dataExcel:MatrInfo:matrNbr]","[dataExcel:MatrInfo:matrNmCn]","[dataExcel:MatrInfo:matrNmEn]","[dataExcel:MatrInfo:matrDesc]","[dataExcel:MatrInfo:matrType]","[dataExcel:MatrInfo:remarks]","[dataExcel:MatrInfo:priceUnit]","[dataExcel:MatrInfo:matrPrice]"

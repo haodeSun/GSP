@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.sys.dao.SysUserConfigDao">
+    
+	<sql id="sysUserConfigColumns">
+		a.id AS "id",
+		a.user_id AS "user.id",
+		a.config_type AS "configType",
+		a.config_param AS "configParam",
+		a.config_value AS "configValue",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="sysUserConfigJoins">
+	</sql>
+    
+	<select id="get" resultType="SysUserConfig">
+		SELECT 
+			<include refid="sysUserConfigColumns"/>
+		FROM sys_user_config a
+		<include refid="sysUserConfigJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SysUserConfig">
+		SELECT 
+			<include refid="sysUserConfigColumns"/>
+		FROM sys_user_config a
+		<include refid="sysUserConfigJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
+			<if test="configType != null and configType != ''">
+				AND a.config_type = #{configType}
+			</if>
+			<if test="configParam != null and configParam != ''">
+				AND a.config_param = #{configParam}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SysUserConfig">
+		SELECT 
+			<include refid="sysUserConfigColumns"/>
+		FROM sys_user_config a
+		<include refid="sysUserConfigJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sys_user_config(
+			id,
+			user_id,
+			config_type,
+			config_param,
+			config_value,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{user.id},
+			#{configType},
+			#{configParam},
+			#{configValue},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sys_user_config SET 	
+			user_id = #{user.id},
+			config_type = #{configType},
+			config_param = #{configParam},
+			config_value = #{configValue},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE sys_user_config SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

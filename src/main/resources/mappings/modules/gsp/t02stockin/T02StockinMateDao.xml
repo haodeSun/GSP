@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t02stockin.T02StockinMateDao">
+    
+	<sql id="t02StockinMateColumns">
+		a.id AS "id",
+		a.mate_id AS "mateId",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.proc_ins_id AS "procInsId",
+		a.sequence AS "sequence",
+		a.description AS "description",
+		a.stor_quan AS "storQuan",
+		a.qual_stat AS "qualStat",
+		a.comments AS "comments",
+		a.stockin_id AS "stockinId.id"
+	</sql>
+	
+	<sql id="t02StockinMateJoins">
+		LEFT JOIN t02_stockin b ON b.id = a.stockin_id
+	</sql>
+    
+	<select id="get" resultType="T02StockinMate">
+		SELECT 
+			<include refid="t02StockinMateColumns"/>
+		FROM t02_stockin_mate a
+		<include refid="t02StockinMateJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="T02StockinMate">
+		SELECT 
+			<include refid="t02StockinMateColumns"/>
+		FROM t02_stockin_mate a
+		<include refid="t02StockinMateJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="stockinId != null and stockinId.id != null and stockinId.id != ''">
+				AND a.stockin_id = #{stockinId.id}
+			</if>
+			<if test="mateId != null and mateId != null and mateId != ''">
+				AND a.mate_id = #{mateId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="T02StockinMate">
+		SELECT 
+			<include refid="t02StockinMateColumns"/>
+		FROM t02_stockin_mate a
+		<include refid="t02StockinMateJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t02_stockin_mate(
+			id,
+			mate_id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			proc_ins_id,
+			sequence,
+			description,
+			stor_quan,
+			qual_stat,
+			comments,
+			stockin_id
+		) VALUES (
+			#{id},
+			#{mateId},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{procInsId},
+			#{sequence},
+			#{description},
+			#{storQuan},
+			#{qualStat},
+			#{comments},
+			#{stockinId.id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t02_stockin_mate SET 	
+			mate_id = #{mateId},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			proc_ins_id = #{procInsId},
+			sequence = #{sequence},
+			description = #{description},
+			stor_quan = #{storQuan},
+			qual_stat = #{qualStat},
+			comments = #{comments},
+			stockin_id = #{stockinId.id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t02_stockin_mate SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		<choose>
+			<when test="id !=null and id != ''">
+				WHERE id = #{id}
+			</when>
+			<otherwise>
+				WHERE stockin_id = #{stockinId.id}
+			</otherwise>
+		</choose>
+	</update>
+	
+</mapper>

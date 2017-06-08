@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="34px" height="73px" viewBox="0 0 34 73" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 40.3 (33839) - http://www.bohemiancoding.com/sketch -->
+    <title>审查状态-等待审批</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M-19.25,21.2499204 C-19.25,20.1453949 -18.3594885,19.25 -17.2542747,19.25 L53.25,19.25 L43.25,36.25 L53.25,53.25 L-17.2542747,53.25 C-18.3564833,53.25 -19.25,52.3580589 -19.25,51.2500796 L-19.25,21.2499204 Z" id="path-1"></path>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="72.5" height="34" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="2-1-5-1-首营-产品资质-产品资质审批-等待审批" transform="translate(-1272.000000, -159.000000)">
+            <g id="审查状态-等待审批" transform="translate(1272.000000, 159.000000)">
+                <path d="M-19.25,21.2499204 C-19.25,20.1453949 -18.3594885,19.25 -17.2542747,19.25 L53.25,19.25 L43.25,36.25 L53.25,53.25 L-17.2542747,53.25 C-18.3564833,53.25 -19.25,52.3580589 -19.25,51.2500796 L-19.25,21.2499204 Z" id="Rectangle-12-Copy" fill="#FFFFFF" transform="translate(17.000000, 36.250000) rotate(-270.000000) translate(-17.000000, -36.250000) "></path>
+                <use id="Rectangle-12-Copy" stroke="#1FB5AC" mask="url(#mask-2)" stroke-width="2" fill-opacity="0.1" fill="#1FB5AC" transform="translate(17.000000, 36.250000) rotate(-270.000000) translate(-17.000000, -36.250000) " xlink:href="#path-1"></use>
+                <text id="等-待-审-批" font-family="MicrosoftYaHei, Microsoft YaHei" font-size="10" font-weight="normal" line-spacing="10" fill="#1FB5AC">
+                    <tspan x="12" y="21">等</tspan>
+                    <tspan x="12" y="32">待</tspan>
+                    <tspan x="12" y="43">审</tspan>
+                    <tspan x="12" y="54">批</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>

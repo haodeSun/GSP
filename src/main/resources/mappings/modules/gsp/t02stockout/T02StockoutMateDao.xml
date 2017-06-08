@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t02stockout.T02StockoutMateDao">
+    
+	<sql id="t02StockoutMateColumns">
+		a.id AS "id",
+		a.mate_id AS "mateId",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.proc_ins_id AS "procInsId",
+		a.seri_no AS "seriNo",
+		a.describe AS "describe",
+		a.out_quan AS "outQuan",
+		a.unit AS "unit",
+		a.unit_cont AS "unitCont",
+		a.count AS "count",
+		a.batch_numb AS "batchNumb",
+		a.comm AS "comm",
+		a.stockout_id AS "stockoutId.id"
+	</sql>
+	
+	<sql id="t02StockoutMateJoins">
+		LEFT JOIN t02_stockout b ON b.id = a.stockout_id
+	</sql>
+    
+	<select id="get" resultType="T02StockoutMate">
+		SELECT 
+			<include refid="t02StockoutMateColumns"/>
+		FROM t02_stockout_mate a
+		<include refid="t02StockoutMateJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="T02StockoutMate">
+		SELECT 
+			<include refid="t02StockoutMateColumns"/>
+		FROM t02_stockout_mate a
+		<include refid="t02StockoutMateJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="stockoutId != null and stockoutId.id != null and stockoutId.id != ''">
+				AND a.stockout_id = #{stockoutId.id}
+			</if>
+			<if test="mateId != null and mateId != null and mateId != ''">
+				AND a.mate_id = #{mateId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="T02StockoutMate">
+		SELECT 
+			<include refid="t02StockoutMateColumns"/>
+		FROM t02_stockout_mate a
+		<include refid="t02StockoutMateJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t02_stockout_mate(
+			id,
+			mate_id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			proc_ins_id,
+			seri_no,
+			describe,
+			out_quan,
+			unit,
+			unit_cont,
+			count,
+			batch_numb,
+			comm,
+			stockout_id
+		) VALUES (
+			#{id},
+			#{mateId},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{procInsId},
+			#{seriNo},
+			#{describe},
+			#{outQuan},
+			#{unit},
+			#{unitCont},
+			#{count},
+			#{batchNumb},
+			#{comm},
+			#{stockoutId.id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t02_stockout_mate SET 	
+			mate_id = #{mateId},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			proc_ins_id = #{procInsId},
+			seri_no = #{seriNo},
+			describe = #{describe},
+			out_quan = #{outQuan},
+			unit = #{unit},
+			unit_cont = #{unitCont},
+			count = #{count},
+			batch_numb = #{batchNumb},
+			comm = #{comm},
+			stockout_id = #{stockoutId.id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t02_stockout_mate SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		<choose>
+			<when test="id !=null and id != ''">
+				WHERE id = #{id}
+			</when>
+			<otherwise>
+				WHERE stockout_id = #{stockoutId.id}
+			</otherwise>
+		</choose>
+	</update>
+	
+</mapper>

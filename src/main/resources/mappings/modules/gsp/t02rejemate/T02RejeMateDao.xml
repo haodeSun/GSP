@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t02rejemate.T02RejeMateDao">
+    
+	<sql id="t02RejeMateColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.proc_ins_id AS "procInsId",
+		a.comm_code AS "commCode",
+		a.comm_bar_code AS "commBarCode",
+		a.comm_name AS "commName",
+		a.unit AS "unit",
+		a.unit_cont AS "unitCont",
+		a.orig_coun AS "origCoun",
+		a.count AS "count",
+		a.pick_batc AS "pickBatc",
+		a.sold_pric AS "soldPric",
+		a.tax_tran_pric AS "taxTranPric",
+		a.tax_amou AS "taxAmou",
+		a.acti_type AS "actiType",
+		a.prom_no AS "promNo"
+	</sql>
+	
+	<sql id="t02RejeMateJoins">
+	</sql>
+    
+	<select id="get" resultType="T02RejeMate">
+		SELECT 
+			<include refid="t02RejeMateColumns"/>
+		FROM t02_reje_mate a
+		<include refid="t02RejeMateJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="T02RejeMate">
+		SELECT 
+			<include refid="t02RejeMateColumns"/>
+		FROM t02_reje_mate a
+		<include refid="t02RejeMateJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+				AND a.update_by = #{updateBy.id}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+			<if test="procInsId != null and procInsId != ''">
+				AND a.proc_ins_id = #{procInsId}
+			</if>
+			<if test="commCode != null and commCode != ''">
+				AND a.comm_code = #{commCode}
+			</if>
+			<if test="commBarCode != null and commBarCode != ''">
+				AND a.comm_bar_code = #{commBarCode}
+			</if>
+			<if test="commName != null and commName != ''">
+				AND a.comm_name = #{commName}
+			</if>
+			<if test="unit != null and unit != ''">
+				AND a.unit = #{unit}
+			</if>
+			<if test="unitCont != null and unitCont != ''">
+				AND a.unit_cont = #{unitCont}
+			</if>
+			<if test="origCoun != null and origCoun != ''">
+				AND a.orig_coun = #{origCoun}
+			</if>
+			<if test="count != null and count != ''">
+				AND a.count = #{count}
+			</if>
+			<if test="pickBatc != null and pickBatc != ''">
+				AND a.pick_batc = #{pickBatc}
+			</if>
+			<if test="soldPric != null and soldPric != ''">
+				AND a.sold_pric = #{soldPric}
+			</if>
+			<if test="taxTranPric != null and taxTranPric != ''">
+				AND a.tax_tran_pric = #{taxTranPric}
+			</if>
+			<if test="taxAmou != null and taxAmou != ''">
+				AND a.tax_amou = #{taxAmou}
+			</if>
+			<if test="actiType != null and actiType != ''">
+				AND a.acti_type = #{actiType}
+			</if>
+			<if test="promNo != null and promNo != ''">
+				AND a.prom_no = #{promNo}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="T02RejeMate">
+		SELECT 
+			<include refid="t02RejeMateColumns"/>
+		FROM t02_reje_mate a
+		<include refid="t02RejeMateJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t02_reje_mate(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			proc_ins_id,
+			comm_code,
+			comm_bar_code,
+			comm_name,
+			unit,
+			unit_cont,
+			orig_coun,
+			count,
+			pick_batc,
+			sold_pric,
+			tax_tran_pric,
+			tax_amou,
+			acti_type,
+			prom_no
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{procInsId},
+			#{commCode},
+			#{commBarCode},
+			#{commName},
+			#{unit},
+			#{unitCont},
+			#{origCoun},
+			#{count},
+			#{pickBatc},
+			#{soldPric},
+			#{taxTranPric},
+			#{taxAmou},
+			#{actiType},
+			#{promNo}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t02_reje_mate SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			proc_ins_id = #{procInsId},
+			comm_code = #{commCode},
+			comm_bar_code = #{commBarCode},
+			comm_name = #{commName},
+			unit = #{unit},
+			unit_cont = #{unitCont},
+			orig_coun = #{origCoun},
+			count = #{count},
+			pick_batc = #{pickBatc},
+			sold_pric = #{soldPric},
+			tax_tran_pric = #{taxTranPric},
+			tax_amou = #{taxAmou},
+			acti_type = #{actiType},
+			prom_no = #{promNo}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t02_reje_mate SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

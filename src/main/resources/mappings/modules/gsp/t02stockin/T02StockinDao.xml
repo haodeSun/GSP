@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t02stockin.T02StockinDao">
+    
+	<sql id="t02StockinColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.proc_ins_id AS "procInsId",
+		a.stoc_no AS "stocNo",
+		a.check_no AS "checkNo",
+		a.stoc_date AS "stocDate",
+		a.audit_pers AS "auditPers",
+		a.ware_house_id AS "wareHouseId",
+		a.ware_sign AS "wareSign"
+	</sql>
+	
+	<sql id="t02StockinJoins">
+	</sql>
+    
+	<select id="get" resultType="T02Stockin">
+		SELECT 
+			<include refid="t02StockinColumns"/>
+		FROM t02_stockin a
+		<include refid="t02StockinJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="T02Stockin">
+		SELECT 
+			<include refid="t02StockinColumns"/>
+		FROM t02_stockin a
+		<include refid="t02StockinJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="T02Stockin">
+		SELECT 
+			<include refid="t02StockinColumns"/>
+		FROM t02_stockin a
+		<include refid="t02StockinJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t02_stockin(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			proc_ins_id,
+			stoc_no,
+			check_no,
+			stoc_date,
+			audit_pers,
+			ware_house_id,
+			ware_sign
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{procInsId},
+			#{stocNo},
+			#{checkNo},
+			#{stocDate},
+			#{auditPers},
+			#{wareHouseId},
+			#{wareSign}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t02_stockin SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			proc_ins_id = #{procInsId},
+			stoc_no = #{stocNo},
+			check_no = #{checkNo},
+			stoc_date = #{stocDate},
+			audit_pers = #{auditPers},
+			ware_house_id = #{wareHouseId},
+			ware_sign = #{wareSign}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t02_stockin SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

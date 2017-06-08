@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t02purchase.T02PurcMateDao">
+    
+	<sql id="t02PurcMateColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.proc_ins_id AS "procInsId",
+		a.mate_id AS "mateId",
+		a.purc_price AS "purcPrice",
+		a.purc_id AS "purcId.id",
+		a.purc_count AS "purcCount",
+		a.amount AS "amount",
+		a.quota AS "quota",
+		a.meas_unit AS "measUnit",
+		a.unit_cont AS "unitCont",
+		a.order_quan AS "orderQuan",
+		a.purc_surp AS "purcSurp",
+		a.tran_price_no_tax AS "tranPriceNoTax",
+		a.fee AS "fee",
+		a.no_tax_amou AS "noTaxAmou",
+		a.tax_tran_price AS "taxTranPrice",
+		a.tax_amou AS "taxAmou",
+		a.tax_rates AS "taxRates",
+		a.tax AS "tax",
+		a.refe_price AS "refePrice",
+		a.prod_unit AS "prodUnit",
+		a.prod_price_no_tax AS "prodPriceNoTax",
+		a.stan_box_coef AS "stanBoxCoef",
+		a.stan_box_quan AS "stanBoxQuan",
+		a.comments AS "comments",
+		a.outer_box_cont AS "outerBoxCont"
+	</sql>
+	
+	<sql id="t02PurcMateJoins">
+		LEFT JOIN t02_purchase b ON b.id = a.purc_id
+	</sql>
+    
+	<select id="get" resultType="T02PurcMate">
+		SELECT 
+			<include refid="t02PurcMateColumns"/>
+		FROM t02_purc_mate a
+		<include refid="t02PurcMateJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="T02PurcMate">
+		SELECT 
+			<include refid="t02PurcMateColumns"/>
+		FROM t02_purc_mate a
+		<include refid="t02PurcMateJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="purcId != null and purcId.id != null and purcId.id != ''">
+				AND a.purc_id = #{purcId.id}
+			</if>
+			<if test="mateId != null and mateId != null and mateId != ''">
+				AND a.mate_id = #{mateId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="T02PurcMate">
+		SELECT 
+			<include refid="t02PurcMateColumns"/>
+		FROM t02_purc_mate a
+		<include refid="t02PurcMateJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t02_purc_mate(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			proc_ins_id,
+			mate_id,
+			purc_price,
+			purc_id,
+			purc_count,
+			amount,
+			quota,
+			meas_unit,
+			unit_cont,
+			order_quan,
+			purc_surp,
+			tran_price_no_tax,
+			fee,
+			no_tax_amou,
+			tax_tran_price,
+			tax_amou,
+			tax_rates,
+			tax,
+			refe_price,
+			prod_unit,
+			prod_price_no_tax,
+			stan_box_coef,
+			stan_box_quan,
+			comments,
+			outer_box_cont
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{procInsId},
+			#{mateId},
+			#{purcPrice},
+			#{purcId.id},
+			#{purcCount},
+			#{amount},
+			#{quota},
+			#{measUnit},
+			#{unitCont},
+			#{orderQuan},
+			#{purcSurp},
+			#{tranPriceNoTax},
+			#{fee},
+			#{noTaxAmou},
+			#{taxTranPrice},
+			#{taxAmou},
+			#{taxRates},
+			#{tax},
+			#{refePrice},
+			#{prodUnit},
+			#{prodPriceNoTax},
+			#{stanBoxCoef},
+			#{stanBoxQuan},
+			#{comments},
+			#{outerBoxCont}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t02_purc_mate SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			proc_ins_id = #{procInsId},
+			mate_id = #{mateId},
+			purc_price = #{purcPrice},
+			purc_id = #{purcId.id},
+			purc_count = #{purcCount},
+			amount = #{amount},
+			quota = #{quota},
+			meas_unit = #{measUnit},
+			unit_cont = #{unitCont},
+			order_quan = #{orderQuan},
+			purc_surp = #{purcSurp},
+			tran_price_no_tax = #{tranPriceNoTax},
+			fee = #{fee},
+			no_tax_amou = #{noTaxAmou},
+			tax_tran_price = #{taxTranPrice},
+			tax_amou = #{taxAmou},
+			tax_rates = #{taxRates},
+			tax = #{tax},
+			refe_price = #{refePrice},
+			prod_unit = #{prodUnit},
+			prod_price_no_tax = #{prodPriceNoTax},
+			stan_box_coef = #{stanBoxCoef},
+			stan_box_quan = #{stanBoxQuan},
+			comments = #{comments},
+			outer_box_cont = #{outerBoxCont}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t02_purc_mate SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		<choose>
+			<when test="id !=null and id != ''">
+				WHERE id = #{id}
+			</when>
+			<otherwise>
+				WHERE purc_id = #{purcId.id}
+			</otherwise>
+		</choose>
+	</update>
+	
+</mapper>

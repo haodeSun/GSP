@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t01materiel.T01MaterielDao">
+    
+	<sql id="t01MaterielColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.proc_ins_id AS "procInsId",
+		a.mate_name AS "mateName",
+		a.description AS "description",
+		a.long_desc AS "longDesc",
+		a.type AS "type",
+		a.stor_cond AS "storCond",
+		a.stor_cond_temp AS "storCondTemp",
+		a.stor_cond_humi AS "storCondHumi",
+		a.tran_cond AS "tranCond",
+		a.tran_cond_temp AS "tranCondTemp",
+		a.tran_cond_humi AS "tranCondHumi",
+		a.comments AS "comments"
+	</sql>
+	
+	<sql id="t01MaterielJoins">
+	</sql>
+    
+	<select id="get" resultType="T01Materiel">
+		SELECT 
+			<include refid="t01MaterielColumns"/>
+		FROM t01_materiel a
+		<include refid="t01MaterielJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="T01Materiel">
+		SELECT 
+			<include refid="t01MaterielColumns"/>
+		FROM t01_materiel a
+		<include refid="t01MaterielJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+				AND a.update_by = #{updateBy.id}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+			<if test="procInsId != null and procInsId != ''">
+				AND a.proc_ins_id = #{procInsId}
+			</if>
+			<if test="mateName != null and mateName != ''">
+				AND a.mate_name = #{mateName}
+			</if>
+			<if test="description != null and description != ''">
+				AND a.description = #{description}
+			</if>
+			<if test="longDesc != null and longDesc != ''">
+				AND a.long_desc = #{longDesc}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="storCond != null and storCond != ''">
+				AND a.stor_cond = #{storCond}
+			</if>
+			<if test="storCondTemp != null and storCondTemp != ''">
+				AND a.stor_cond_temp = #{storCondTemp}
+			</if>
+			<if test="storCondHumi != null and storCondHumi != ''">
+				AND a.stor_cond_humi = #{storCondHumi}
+			</if>
+			<if test="tranCond != null and tranCond != ''">
+				AND a.tran_cond = #{tranCond}
+			</if>
+			<if test="tranCondTemp != null and tranCondTemp != ''">
+				AND a.tran_cond_temp = #{tranCondTemp}
+			</if>
+			<if test="tranCondHumi != null and tranCondHumi != ''">
+				AND a.tran_cond_humi = #{tranCondHumi}
+			</if>
+			<if test="comments != null and comments != ''">
+				AND a.comments = #{comments}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="T01Materiel">
+		SELECT 
+			<include refid="t01MaterielColumns"/>
+		FROM t01_materiel a
+		<include refid="t01MaterielJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t01_materiel(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			proc_ins_id,
+			mate_name,
+			description,
+			long_desc,
+			type,
+			stor_cond,
+			stor_cond_temp,
+			stor_cond_humi,
+			tran_cond,
+			tran_cond_temp,
+			tran_cond_humi,
+			comments
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{procInsId},
+			#{mateName},
+			#{description},
+			#{longDesc},
+			#{type},
+			#{storCond},
+			#{storCondTemp},
+			#{storCondHumi},
+			#{tranCond},
+			#{tranCondTemp},
+			#{tranCondHumi},
+			#{comments}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t01_materiel SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			proc_ins_id = #{procInsId},
+			mate_name = #{mateName},
+			description = #{description},
+			long_desc = #{longDesc},
+			type = #{type},
+			stor_cond = #{storCond},
+			stor_cond_temp = #{storCondTemp},
+			stor_cond_humi = #{storCondHumi},
+			tran_cond = #{tranCond},
+			tran_cond_temp = #{tranCondTemp},
+			tran_cond_humi = #{tranCondHumi},
+			comments = #{comments}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t01_materiel SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

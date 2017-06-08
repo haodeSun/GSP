@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t02purchase.T02PurchaseDao">
+    
+	<sql id="t02PurchaseColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.proc_ins_id AS "procInsId",
+		a.purc_numb AS "purcNumb",
+		a.purc_date AS "purcDate",
+		a.sugg_vend_cont AS "suggVendCont",
+		a.mate_id AS "mateId",
+		a.review_status AS "reviewStatus",
+		a.ship_via_look_code AS "shipViaLookCode",
+		a.documents AS "documents",
+		a.comments AS "comments",
+		a.total_order_price AS "totalOrderPrice",
+		a.buyer_code AS "buyerCode",
+		a.order_type AS "orderType",
+		a.total_box_numb AS "totalBoxNumb",
+		a.total_numb AS "totalNumb",
+		a.bill_date AS "billDate",
+		a.arri_date AS "arriDate",
+		a.tax_amou AS "taxAmou",
+		a.rece_amou AS "receAmou",
+		a.notification AS "notification"
+	</sql>
+	
+	<sql id="t02PurchaseJoins">
+	</sql>
+    
+	<select id="get" resultType="T02Purchase">
+		SELECT 
+			<include refid="t02PurchaseColumns"/>
+		FROM t02_purchase a
+		<include refid="t02PurchaseJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="T02Purchase">
+		SELECT 
+			<include refid="t02PurchaseColumns"/>
+		FROM t02_purchase a
+		<include refid="t02PurchaseJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="T02Purchase">
+		SELECT 
+			<include refid="t02PurchaseColumns"/>
+		FROM t02_purchase a
+		<include refid="t02PurchaseJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t02_purchase(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			proc_ins_id,
+			purc_numb,
+			purc_date,
+			sugg_vend_cont,
+			mate_id,
+			review_status,
+			ship_via_look_code,
+			documents,
+			comments,
+			total_order_price,
+			buyer_code,
+			order_type,
+			total_box_numb,
+			total_numb,
+			bill_date,
+			arri_date,
+			tax_amou,
+			rece_amou,
+			notification
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{procInsId},
+			#{purcNumb},
+			#{purcDate},
+			#{suggVendCont},
+			#{mateId},
+			#{reviewStatus},
+			#{shipViaLookCode},
+			#{documents},
+			#{comments},
+			#{totalOrderPrice},
+			#{buyerCode},
+			#{orderType},
+			#{totalBoxNumb},
+			#{totalNumb},
+			#{billDate},
+			#{arriDate},
+			#{taxAmou},
+			#{receAmou},
+			#{notification}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t02_purchase SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			proc_ins_id = #{procInsId},
+			purc_numb = #{purcNumb},
+			purc_date = #{purcDate},
+			sugg_vend_cont = #{suggVendCont},
+			mate_id = #{mateId},
+			review_status = #{reviewStatus},
+			ship_via_look_code = #{shipViaLookCode},
+			documents = #{documents},
+			comments = #{comments},
+			total_order_price = #{totalOrderPrice},
+			buyer_code = #{buyerCode},
+			order_type = #{orderType},
+			total_box_numb = #{totalBoxNumb},
+			total_numb = #{totalNumb},
+			bill_date = #{billDate},
+			arri_date = #{arriDate},
+			tax_amou = #{taxAmou},
+			rece_amou = #{receAmou},
+			notification = #{notification}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t02_purchase SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

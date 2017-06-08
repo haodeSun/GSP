@@ -1,0 +1,72 @@
+
+_include("../common/CommonUtils.sah");
+
+/* 登陆 */
+function login($username, $password){
+	_setValue(_textbox("username"), $username);
+	_setValue(_password("password"), $password);
+	_click(_submit("登 录"));
+	_assertExists(_listItem(8));
+}
+
+/* 新增物料 */
+function addMatrInfo($matrNbr, $matrNmCn, $matrNmEn, $matrDesc, $matrType,$remarks, $priceUnit, $matrPrice){
+	_click(_link("物料信息新增"));
+	_setValue(_textbox("matrNbr"), $matrNbr);
+	_setValue(_textbox("matrNmCn"), $matrNmCn);
+	_setValue(_textbox("matrNmEn"), $matrNmEn);
+	_setValue(_textbox("matrDesc"), $matrDesc);
+	clickDrop(_near(_label("* 物料分类：")));
+	_click(_div($matrType));
+	_setValue(_textbox("remarks"), $remarks);
+	_click(_link("价格信息"));
+	_setValue(_textbox("priceUnit"), $priceUnit);
+	_setValue(_textbox("matrPrice"), $matrPrice);
+	_click(_button("保 存"));
+
+
+	_assertExists(_div("×保存物料信息成功"));
+	_assertVisible(_div("×保存物料信息成功"));
+	_assertEqual("×保存物料信息成功", _getText(_div("×保存物料信息成功")));
+	_assertEqual($matrNbr, _getValue(_textbox("matrNbr")));
+	_assertEqual($matrNmCn, _getValue(_textbox("matrNmCn")));
+	_assertEqual($matrNmEn, _getValue(_textbox("matrNmEn")));
+	_assertEqual($matrDesc, _getValue(_textbox("matrDesc")));
+	_assertEqual($remarks, _getValue(_textbox("remarks")));
+	_assertEqual($priceUnit, _getValue(_textbox("priceUnit")));
+	_assertEqual($matrPrice, _getValue(_textbox("matrPrice")));
+
+}
+
+/* 通过单一输入框文本条件查询 */
+function searchByOneInputCondition($type,$condition, $inputValue, $resultCount,$resultValue){
+	_click(_link("物料信息查询"));
+	clickDrop(_near(_span("查询条件")));
+	_click(_div($condition));
+	_click(_submit("添加条件"));
+
+	_setValue(_textbox(0,_near(_label($condition+"："))), $inputValue);
+	_click(_submit("查询"));
+
+	var $rowList=_collect($type,"",_under( _tableHeader($condition)));
+	_assertEqual($resultCount,$rowList.length);
+	for (var $i=0; $i<$rowList.length; $i++) {
+		_assertEqual($resultValue,_getText($rowList[$i]));
+	}
+}
+
+/* 退出 */
+function logout(){
+	_click(_listItem(8));
+}
+
+/* --Functions Above-- */
+
+//login("物料录入员", "123456");
+
+//addMatrInfo("Mart00101", "物料", "mart", "测试物料", "医疗器械","测试物料备注", "人民币", "1");
+
+//searchByOneInputCondition("_link","物料号","Mart00101", "1","/^.*1.*$/");
+//searchByOneInputCondition("_cell","物料名称（中文）","4", "2","/^.*4.*$/");
+//
+//logout();

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.thinkgem.jeesite.modules.gsp.dao.t01matrinfo.T01MatrInfoDao">
+
+<sql id="t01MatrInfoImportColumns">
+		a.id AS "id",
+		a.matr_nbr AS "matrNbr",
+		a.matr_nm_cn AS "matrNmCn",
+		a.matr_nm_en AS "matrNmEn",
+		a.matr_desc AS "matrDesc",
+		a.matr_type AS "matrType",
+		a.price_unit AS "priceUnit",
+		a.matr_price AS "matrPrice",
+		a.mart_stat AS "martStat",
+		a.proc_ins_id AS "procInsId",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	<update id="updateImportState">
+		UPDATE t01_matr_sync SET
+		sync_Stat = #{syncStat},
+		sync_Rslt = #{syncRslt}
+		WHERE id = #{id}
+	</update>
+	<select id="findSelectedImportList" resultType="T01MatrInfoImport">
+		SELECT
+		<include refid="t01MatrInfoImportColumns" />
+		FROM t01_matr_sync a
+		WHERE a.id in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		AND del_flag = 0
+	</select>
+	<select id="findImportList" resultType="T01MatrInfoImport">
+		SELECT
+		<include refid="t01MatrInfoImportColumns" />,
+		a.sync_Stat AS "syncStat",
+		a.sync_Rslt AS "syncRslt"
+		FROM t01_matr_sync a
+		WHERE 	a.batch = #{batch}
+		AND del_flag = 0
+	</select>
+	<insert id="insertImportBatch">
+		INSERT INTO t01_matr_sync(
+		id,
+		matr_nbr,
+		matr_nm_cn,
+		matr_nm_en,
+		matr_desc,
+		matr_type,
+		price_unit,
+		matr_price,
+		mart_stat,
+		proc_ins_id,
+		create_by,
+		create_date,
+		update_by,
+		update_date,
+		remarks,
+		del_flag,
+		batch,
+		sync_Stat
+		) VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.id},
+			#{item.matrNbr},
+			#{item.matrNmCn},
+			#{item.matrNmEn},
+			#{item.matrDesc},
+			#{item.matrType},
+			#{item.priceUnit},
+			#{item.matrPrice},
+			#{item.martStat},
+			#{item.procInsId},
+			#{item.createBy.id},
+			#{item.createDate},
+			#{item.updateBy.id},
+			#{item.updateDate},
+			#{item.remarks},
+			#{item.delFlag},
+			#{item.batch},
+			#{item.syncStat})
+		</foreach>
+	</insert>
+
+	<update id="deleteList">
+		UPDATE t01_matr_info SET
+		del_flag = 1
+		WHERE id in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		AND appr_stat = 0
+	</update>
+
+	<select id="findSelectedList" resultType="T01MatrInfo">
+		SELECT
+		<include refid="t01MatrInfoColumns" />
+		FROM t01_matr_info a
+		WHERE a.id in
+		<foreach collection="list" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		AND del_flag = 0
+	</select>
+	
+	<select id="findByMatrNbr" resultType="T01MatrInfo">
+		SELECT
+		<include refid="t01MatrInfoColumns" />
+		FROM t01_matr_info a
+		WHERE a.matr_nbr = #{matrNbr}
+		AND del_flag = 0
+	</select>
+
+	<insert id="insertBatch">
+		INSERT INTO t01_matr_info(
+		id,
+		matr_nbr,
+		matr_nm_cn,
+		matr_nm_en,
+		matr_desc,
+		matr_type,
+		price_unit,
+		matr_price,
+		mart_stat,
+		proc_ins_id,
+		appr_status,
+		appr_opin,
+		isappr,
+		create_by,
+		create_date,
+		update_by,
+		update_date,
+		remarks,
+		del_flag
+		) VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.id},
+			#{item.matrNbr},
+			#{item.matrNmCn},
+			#{item.matrNmEn},
+			#{item.matrDesc},
+			#{item.matrType},
+			#{item.priceUnit},
+			#{item.matrPrice},
+			#{item.martStat},
+			#{item.procInsId},
+			#{item.apprStatus},
+			#{item.apprOpin},
+			#{item.isappr},
+			#{item.createBy.id},
+			#{item.createDate},
+			#{item.updateBy.id},
+			#{item.updateDate},
+			#{item.remarks},
+			#{item.delFlag})
+		</foreach>
+	</insert>
+</mapper>

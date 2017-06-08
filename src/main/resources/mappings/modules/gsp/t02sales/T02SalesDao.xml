@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t02sales.T02SalesDao">
+    
+	<sql id="t02SalesColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.proc_ins_id AS "procInsId",
+		a.sales_numb AS "salesNumb",
+		a.sales_date AS "salesDate",
+		a.cust_company_id AS "custCompanyId",
+		a.cont_meth AS "contMeth",
+		a.deli_date AS "deliDate",
+		a.tran_meth AS "tranMeth",
+		a.bill AS "bill",
+		a.comments AS "comments",
+		a.total_order_price AS "totalOrderPrice",
+		a.department AS "department",
+		a.customer AS "customer",
+		a.sales_repr AS "salesRepr",
+		a.deli_ware AS "deliWare",
+		a.sett_meth AS "settMeth",
+		a.deli_addr AS "deliAddr",
+		a.auto_numb AS "autoNumb",
+		a.manu_numb AS "manuNumb",
+		a.alf AS "alf",
+		a.issue_addr AS "issueAddr",
+		a.pre_pay_amou AS "prePayAmou",
+		a.tax_amou AS "taxAmou",
+		a.total_box_numb AS "totalBoxNumb",
+		a.total_numb AS "totalNumb",
+		a.ship_meth AS "shipMeth",
+		a.total_reta_sales AS "totalRetaSales"
+	</sql>
+	
+	<sql id="t02SalesJoins">
+	</sql>
+    
+	<select id="get" resultType="T02Sales">
+		SELECT 
+			<include refid="t02SalesColumns"/>
+		FROM t02_sales a
+		<include refid="t02SalesJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="T02Sales">
+		SELECT 
+			<include refid="t02SalesColumns"/>
+		FROM t02_sales a
+		<include refid="t02SalesJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="T02Sales">
+		SELECT 
+			<include refid="t02SalesColumns"/>
+		FROM t02_sales a
+		<include refid="t02SalesJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t02_sales(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			proc_ins_id,
+			sales_numb,
+			sales_date,
+			cust_company_id,
+			cont_meth,
+			deli_date,
+			tran_meth,
+			bill,
+			comments,
+			total_order_price,
+			department,
+			customer,
+			sales_repr,
+			deli_ware,
+			sett_meth,
+			deli_addr,
+			auto_numb,
+			manu_numb,
+			alf,
+			issue_addr,
+			pre_pay_amou,
+			tax_amou,
+			total_box_numb,
+			total_numb,
+			ship_meth,
+			total_reta_sales
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{procInsId},
+			#{salesNumb},
+			#{salesDate},
+			#{custCompanyId},
+			#{contMeth},
+			#{deliDate},
+			#{tranMeth},
+			#{bill},
+			#{comments},
+			#{totalOrderPrice},
+			#{department},
+			#{customer},
+			#{salesRepr},
+			#{deliWare},
+			#{settMeth},
+			#{deliAddr},
+			#{autoNumb},
+			#{manuNumb},
+			#{alf},
+			#{issueAddr},
+			#{prePayAmou},
+			#{taxAmou},
+			#{totalBoxNumb},
+			#{totalNumb},
+			#{shipMeth},
+			#{totalRetaSales}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t02_sales SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			proc_ins_id = #{procInsId},
+			sales_numb = #{salesNumb},
+			sales_date = #{salesDate},
+			cust_company_id = #{custCompanyId},
+			cont_meth = #{contMeth},
+			deli_date = #{deliDate},
+			tran_meth = #{tranMeth},
+			bill = #{bill},
+			comments = #{comments},
+			total_order_price = #{totalOrderPrice},
+			department = #{department},
+			customer = #{customer},
+			sales_repr = #{salesRepr},
+			deli_ware = #{deliWare},
+			sett_meth = #{settMeth},
+			deli_addr = #{deliAddr},
+			auto_numb = #{autoNumb},
+			manu_numb = #{manuNumb},
+			alf = #{alf},
+			issue_addr = #{issueAddr},
+			pre_pay_amou = #{prePayAmou},
+			tax_amou = #{taxAmou},
+			total_box_numb = #{totalBoxNumb},
+			total_numb = #{totalNumb},
+			ship_meth = #{shipMeth},
+			total_reta_sales = #{totalRetaSales}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t02_sales SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

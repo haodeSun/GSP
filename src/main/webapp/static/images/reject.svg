@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="34px" height="73px" viewBox="0 0 34 73" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 40.3 (33839) - http://www.bohemiancoding.com/sketch -->
+    <title>审查状态-审批驳回</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="2-1-5-2-首营-产品资质-产品资质审批-审批驳回" transform="translate(-1272.000000, -159.000000)">
+            <g id="审查状态-审批驳回" transform="translate(1272.000000, 159.000000)">
+                <path d="M-19.25,21.2499204 C-19.25,20.1453949 -18.3594885,19.25 -17.2542747,19.25 L53.25,19.25 L43.25,36.25 L53.25,53.25 L-17.2542747,53.25 C-18.3564833,53.25 -19.25,52.3580589 -19.25,51.2500796 L-19.25,21.2499204 Z" id="Rectangle-12-Copy" fill="#F76D6D" transform="translate(17.000000, 36.250000) rotate(-270.000000) translate(-17.000000, -36.250000) "></path>
+                <text id="审-批-驳-回" font-family="MicrosoftYaHei, Microsoft YaHei" font-size="10" font-weight="normal" line-spacing="10" fill="#FFFFFF">
+                    <tspan x="12" y="21">审</tspan>
+                    <tspan x="12" y="32">批</tspan>
+                    <tspan x="12" y="43">驳</tspan>
+                    <tspan x="12" y="54">回</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>

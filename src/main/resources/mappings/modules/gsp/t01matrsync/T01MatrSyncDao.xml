@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t01matrsync.T01MatrSyncDao">
+    
+	<sql id="t01MatrSyncColumns">
+		a.id AS "id",
+		a.matr_nbr AS "matrNbr",
+		a.matr_nm_cn AS "matrNmCn",
+		a.matr_nm_en AS "matrNmEn",
+		a.matr_desc AS "matrDesc",
+		a.matr_type AS "matrType",
+		a.price_unit AS "priceUnit",
+		a.matr_price AS "matrPrice",
+		a.mart_stat AS "martStat",
+		a.proc_ins_id AS "procInsId",
+		a.sync_sys AS "syncSys",
+		a.sync_mode AS "syncMode",
+		a.batch AS "batch",
+		a.sync_stat AS "syncStat",
+		a.sync_rslt AS "syncRslt",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.ext_id AS "extId"
+	</sql>
+	
+	<sql id="t01MatrSyncJoins">
+	</sql>
+    
+	<select id="get" resultType="T01MatrSync">
+		SELECT 
+			<include refid="t01MatrSyncColumns"/>
+		FROM t01_matr_sync a
+		<include refid="t01MatrSyncJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="T01MatrSync">
+		SELECT 
+			<include refid="t01MatrSyncColumns"/>
+		FROM t01_matr_sync a
+		<include refid="t01MatrSyncJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="batch != null and batch != ''">
+				AND a.batch = #{batch}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="T01MatrSync">
+		SELECT 
+			<include refid="t01MatrSyncColumns"/>
+		FROM t01_matr_sync a
+		<include refid="t01MatrSyncJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t01_matr_sync(
+			id,
+			matr_nbr,
+			matr_nm_cn,
+			matr_nm_en,
+			matr_desc,
+			matr_type,
+			price_unit,
+			matr_price,
+			mart_stat,
+			proc_ins_id,
+			sync_sys,
+			sync_mode,
+			batch,
+			sync_stat,
+			sync_rslt,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			ext_id
+		) VALUES (
+			#{id},
+			#{matrNbr},
+			#{matrNmCn},
+			#{matrNmEn},
+			#{matrDesc},
+			#{matrType},
+			#{priceUnit},
+			#{matrPrice},
+			#{martStat},
+			#{procInsId},
+			#{syncSys},
+			#{syncMode},
+			#{batch},
+			#{syncStat},
+			#{syncRslt},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{extId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t01_matr_sync SET 	
+			matr_nbr = #{matrNbr},
+			matr_nm_cn = #{matrNmCn},
+			matr_nm_en = #{matrNmEn},
+			matr_desc = #{matrDesc},
+			matr_type = #{matrType},
+			price_unit = #{priceUnit},
+			matr_price = #{matrPrice},
+			mart_stat = #{martStat},
+			proc_ins_id = #{procInsId},
+			sync_sys = #{syncSys},
+			sync_mode = #{syncMode},
+			batch = #{batch},
+			sync_stat = #{syncStat},
+			sync_rslt = #{syncRslt},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			ext_id = #{extId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t01_matr_sync SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

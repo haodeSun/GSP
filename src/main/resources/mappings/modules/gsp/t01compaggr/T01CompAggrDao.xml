@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t01compaggr.T01CompAggrDao">
+
+	<sql id="t01CompAggrColumns">
+		${alias}.id 			AS "${prefix}id",
+		${alias}.create_by 		AS "${prefix}createBy.id",
+		${alias}.create_date 	AS "${prefix}createDate",
+		${alias}.update_by 		AS "${prefix}updateBy.id",
+		${alias}.update_date 	AS "${prefix}updateDate",
+		${alias}.remarks 		AS "${prefix}remarks",
+		${alias}.del_flag 		AS "${prefix}delFlag",
+		${alias}.proc_ins_id 	AS "${prefix}procInsId",
+		${alias}.aggr_id 		AS "${prefix}agreementNo",
+		${alias}.orig_id 		AS "${prefix}parentAgreement.id",
+		${alias}.author 		AS "${prefix}author",
+		${alias}.location 		AS "${prefix}location",
+		${alias}.aggr_type 		AS "${prefix}aggrType",
+		${alias}.aggr_scop 		AS "${prefix}aggrScop",
+		${alias}.prod_scop 		AS "${prefix}prodScop",
+		${alias}.prod_comp 		AS "${prefix}prodComp",
+		${alias}.aggr_amnt 		AS "${prefix}aggrAmnt",
+		${alias}.aggr_stat 		AS "${prefix}aggrStat",
+		${alias}.appr_stat 		AS "${prefix}apprStat",
+		${alias}.effec_date 	AS "${prefix}effecDate",
+		${alias}.valid_date 	AS "${prefix}validDate",
+		${alias}.attachment 	AS "${prefix}attachment",
+		${alias}.comp_id        AS "${prefix}comp.id",
+		${alias}.supl_id        AS "${prefix}supplier.id",
+		${alias}.buye_id        AS "${prefix}buyer.id",
+		compInfoBuyer.comp_name_cn        AS "buyer.t01CompInfo.compNameCn",
+		compInfoSupl.comp_name_cn        AS "supplier.t01CompInfo.compNameCn",
+		salesCert.sales_name 		AS "authorName",
+		${alias}.aggr_explain 			AS "${prefix}explain",
+		${alias}.freeze        AS "${prefix}freeze"
+	</sql>
+
+	<sql id="t01CompAggrJoins">
+		LEFT JOIN t01_compl_supl AS complSupl ON complSupl.id = a.supl_id
+		LEFT JOIN t01_comp_info AS compInfoSupl ON complSupl.comp_id=compInfoSupl.id
+		LEFT JOIN t01_compl_buyer complBuyer on complBuyer.id = a.buye_id
+		LEFT JOIN t01_comp_info AS compInfoBuyer ON complBuyer.comp_id=compInfoBuyer.id
+		LEFT JOIN t01_sales_cert AS salesCert ON salesCert.id = a.author
+	</sql>
+
+	<select id="get" resultType="T01CompAggr">
+		SELECT
+			<include refid="t01CompAggrColumns">
+				<property name="alias" value="a"/>
+				<property name="prefix" value=""/>
+			</include>
+<!--		,
+			<include refid="com.thinkgem.jeesite.modules.gsp.dao.t01complsupl.T01ComplSuplDao.t01ComplSuplColumns">
+				<property name="alias" value="b"/>
+				<property name="prefix" value="supplier."/>
+			</include>,
+		    <include refid="com.thinkgem.jeesite.modules.gsp.dao.t01complbuyer.T01ComplBuyerDao.t01ComplBuyerColumns">
+		    	<property name="alias" value="c"/>
+		    	<property name="prefix" value="buyer."/>
+		    </include>-->
+		FROM t01_comp_aggr a
+		<include refid="t01CompAggrJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="T01CompAggr">
+		SELECT
+		    <include refid="t01CompAggrColumns">
+		    	<property name="alias" value="a"/>
+		    	<property name="prefix" value=""/>
+		    </include>
+<!--		,
+		    <include refid="com.thinkgem.jeesite.modules.gsp.dao.t01complsupl.T01ComplSuplDao.t01ComplSuplColumns">
+		    	<property name="alias" value="b"/>
+		    	<property name="prefix" value="supplier."/>
+		    </include>,
+		    <include refid="com.thinkgem.jeesite.modules.gsp.dao.t01complbuyer.T01ComplBuyerDao.t01ComplBuyerColumns">
+		    	<property name="alias" value="c"/>
+		    	<property name="prefix" value="buyer."/>
+		    </include>-->
+		FROM t01_comp_aggr a
+		<include refid="t01CompAggrJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="authorName != null and authorName != ''">
+				AND salesCert.sales_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{authorName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{authorName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{authorName},'%')</if>
+			</if>
+			<if test="buyer!=null and buyer.t01CompInfo.compNameCn != null and buyer.t01CompInfo.compNameCn != ''">
+				AND compInfoBuyer.comp_name_cn LIKE
+				<if test="dbName == 'oracle'">'%'||#{buyer.t01CompInfo.compNameCn}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{buyer.t01CompInfo.compNameCn}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{buyer.t01CompInfo.compNameCn},'%')</if>
+			</if>
+			<if test="supplier!=null and supplier.t01CompInfo.compNameCn != null and supplier.t01CompInfo.compNameCn != ''">
+				AND compInfoSupl.comp_name_cn LIKE
+				<if test="dbName == 'oracle'">'%'||#{supplier.t01CompInfo.compNameCn}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{supplier.t01CompInfo.compNameCn}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{supplier.t01CompInfo.compNameCn},'%')</if>
+			</if>
+			<if test="updateDate != null">
+				AND  date_format(a.update_date,'%Y-%m-%d')= date_format(#{updateDate},'%Y-%m-%d')
+			</if>
+			<if test="updateDateBg != null">
+				AND  a.update_date &gt;= #{updateDateBg}
+			</if>
+			<if test="updateDateEd != null">
+				AND   a.update_date &lt;= #{updateDateEd}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks LIKE
+				<if test="dbName == 'oracle'">'%'||#{remarks}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{remarks}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{remarks},'%')</if>
+			</if>
+			<if test="supplier.id != null and supplier.id != ''">
+				AND a.supl_id = #{supplier.id}
+			</if>
+			<if test="buyer.id != null and buyer.id != ''">
+				AND a.buye_id = #{buyer.id}
+			</if>
+			<if test="agreementNo != null and agreementNo != ''">
+				AND a.aggr_id LIKE
+				<if test="dbName == 'oracle'">'%'||#{agreementNo}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{agreementNo}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{agreementNo},'%')</if>
+			</if>
+			<if test="parentAgreement != null and parentAgreement.id != ''">
+				AND a.aggr_id = #{parentAgreement}
+			</if>
+			<if test="author != null and author != ''">
+				AND a.author LIKE
+				<if test="dbName == 'oracle'">'%'||#{author}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{author}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{author},'%')</if>
+			</if>
+			<if test="location != null and location != ''">
+				AND a.location LIKE
+				<if test="dbName == 'oracle'">'%'||#{location}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{location}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{location},'%')</if>
+			</if>
+			<if test="aggrType != null and aggrType != ''">
+				AND a.aggr_type = #{aggrType}
+			</if>
+			<if test="aggrScop != null and aggrScop != ''">
+				AND a.aggr_scop LIKE
+				<if test="dbName == 'oracle'">'%'||#{aggrScop}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{aggrScop}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{aggrScop},'%')</if>
+			</if>
+			<if test="prodScop != null and prodScop != ''">
+				AND a.prod_scop LIKE
+				<if test="dbName == 'oracle'">'%'||#{prodScop}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{prodScop}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{prodScop},'%')</if>
+			</if>
+			<if test="prodComp != null and prodComp != ''">
+				AND a.prod_comp LIKE
+				<if test="dbName == 'oracle'">'%'||#{prodComp}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{prodComp}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{prodComp},'%')</if>
+			</if>
+			<if test="aggrAmnt != null and aggrAmnt != ''">
+				AND a.aggr_amnt = #{aggrAmnt}
+			</if>
+			<if test="aggrStat != null and aggrStat != ''">
+				AND a.aggr_stat = #{aggrStat}
+			</if>
+			<if test="apprStat != null and apprStat != ''">
+				AND a.appr_stat = #{apprStat}
+			</if>
+			<if test="effecDate != null">
+				AND  date_format(a.effec_date,'%Y-%m-%d')= date_format(#{effecDate},'%Y-%m-%d')
+			</if>
+			<if test="effecDateBg != null">
+				AND  a.effec_date &gt;= #{effecDateBg}
+			</if>
+			<if test="effecDateEd != null">
+				AND   a.effec_date &lt;= #{effecDateEd}
+			</if>
+			<if test="validDate != null">
+				AND  date_format(a.valid_date,'%Y-%m-%d')= date_format(#{validDate},'%Y-%m-%d')
+			</if>
+			<if test="validDateBg != null">
+				AND  a.valid_date &gt;= #{validDateBg}
+			</if>
+			<if test="validDateEd != null">
+				AND   a.valid_date &lt;= #{validDateEd}
+			</if>
+			<if test="attachment != null and attachment != ''">
+				AND a.attachment = #{attachment}
+			</if>
+			<if test="explain != null and explain != ''">
+				AND a.aggr_explain LIKE
+				<if test="dbName == 'oracle'">'%'||#{explain}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{explain}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{explain},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY (CASE WHEN a.appr_stat='0' THEN 1
+				WHEN a.appr_stat='1' THEN 2
+				WHEN a.appr_stat='3' THEN 3
+				WHEN a.appr_stat='2' THEN 4 END),
+				a.update_date
+				DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="T01CompAggr">
+		SELECT
+		    <include refid="t01CompAggrColumns">
+		    	<property name="alias" value="a"/>
+		    	<property name="prefix" value=""/>
+		    </include>
+		FROM t01_comp_aggr a
+		<include refid="t01CompAggrJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY (CASE WHEN a.appr_stat='0' THEN 1
+				WHEN a.appr_stat='1' THEN 2
+				WHEN a.appr_stat='3' THEN 3
+				WHEN a.appr_stat='2' THEN 4 END),
+				a.update_date
+				DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO t01_comp_aggr(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			proc_ins_id,
+			supl_id,
+			buye_id,
+			aggr_id,
+			orig_id,
+			author,
+			location,
+			aggr_type,
+			aggr_scop,
+			prod_scop,
+			prod_comp,
+			aggr_amnt,
+			aggr_stat,
+			appr_stat,
+			effec_date,
+			valid_date,
+			attachment,
+			aggr_explain
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{procInsId},
+			#{supplier.id},
+			#{buyer.id},
+			#{agreementNo},
+			#{parentAgreement.id},
+			#{author},
+			#{location},
+			#{aggrType},
+			#{aggrScop},
+			#{prodScop},
+			#{prodComp},
+			#{aggrAmnt},
+			#{aggrStat},
+			#{apprStat},
+			#{effecDate},
+			#{validDate},
+			#{attachment},
+			#{explain}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE t01_comp_aggr SET
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			proc_ins_id = #{procInsId},
+			supl_id = #{supplier.id},
+			buye_id = #{buyer.id},
+			aggr_id = #{agreementNo},
+			orig_id = #{parentAgreement.id},
+			author = #{author},
+			location = #{location},
+			aggr_type = #{aggrType},
+			aggr_scop = #{aggrScop},
+			prod_scop = #{prodScop},
+			prod_comp = #{prodComp},
+			aggr_amnt = #{aggrAmnt},
+			aggr_stat = #{aggrStat},
+			appr_stat = #{apprStat},
+			effec_date = #{effecDate},
+			valid_date = #{validDate},
+			attachment = #{attachment},
+            aggr_explain = #{explain}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE t01_comp_aggr SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+</mapper>

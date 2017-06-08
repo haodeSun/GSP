@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t02check.T02CheckDao">
+    
+	<sql id="t02CheckColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.proc_ins_id AS "procInsId",
+		a.inventory AS "inventory",
+		a.time AS "time",
+		a.item AS "item",
+		a.conclusion AS "conclusion",
+		a.hand_meas AS "handMeas",
+		a.operator AS "operator"
+	</sql>
+	
+	<sql id="t02CheckJoins">
+	</sql>
+    
+	<select id="get" resultType="T02Check">
+		SELECT 
+			<include refid="t02CheckColumns"/>
+		FROM t02_check a
+		<include refid="t02CheckJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="T02Check">
+		SELECT 
+			<include refid="t02CheckColumns"/>
+		FROM t02_check a
+		<include refid="t02CheckJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+				AND a.update_by = #{updateBy.id}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+			<if test="procInsId != null and procInsId != ''">
+				AND a.proc_ins_id = #{procInsId}
+			</if>
+			<if test="inventory != null and inventory != ''">
+				AND a.inventory = #{inventory}
+			</if>
+			<if test="time != null and time != ''">
+				AND a.time = #{time}
+			</if>
+			<if test="item != null and item != ''">
+				AND a.item = #{item}
+			</if>
+			<if test="conclusion != null and conclusion != ''">
+				AND a.conclusion = #{conclusion}
+			</if>
+			<if test="handMeas != null and handMeas != ''">
+				AND a.hand_meas = #{handMeas}
+			</if>
+			<if test="operator != null and operator != ''">
+				AND a.operator = #{operator}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="T02Check">
+		SELECT 
+			<include refid="t02CheckColumns"/>
+		FROM t02_check a
+		<include refid="t02CheckJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t02_check(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			proc_ins_id,
+			inventory,
+			time,
+			item,
+			conclusion,
+			hand_meas,
+			operator
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{procInsId},
+			#{inventory},
+			#{time},
+			#{item},
+			#{conclusion},
+			#{handMeas},
+			#{operator}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t02_check SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			proc_ins_id = #{procInsId},
+			inventory = #{inventory},
+			time = #{time},
+			item = #{item},
+			conclusion = #{conclusion},
+			hand_meas = #{handMeas},
+			operator = #{operator}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t02_check SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

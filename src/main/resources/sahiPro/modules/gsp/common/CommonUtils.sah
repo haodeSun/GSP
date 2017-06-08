@@ -1,0 +1,7 @@
+/* 点击下拉框插件
+*  $position 唯一定位
+*/
+function clickDrop($position){
+	_click(_link("select2-choice",$position));
+}
+

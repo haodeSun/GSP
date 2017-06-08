@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t01aggrmatr.T01AggrMatrDao">
+
+	<update id="deleteByAggrId">
+		UPDATE t01_aggr_matr SET
+		del_flag = 1
+		WHERE aggr_id = #{aggrId}
+	</update>
+
+</mapper>

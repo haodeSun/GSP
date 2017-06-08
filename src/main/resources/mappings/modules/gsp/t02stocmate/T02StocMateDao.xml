@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t02stocmate.T02StocMateDao">
+    
+	<sql id="t02StocMateColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.proc_ins_id AS "procInsId",
+		a.location AS "location",
+		a.mate_numb AS "mateNumb",
+		a.description AS "description",
+		a.prod_name AS "prodName",
+		a.model_spec AS "modelSpec",
+		a.regi_cert_no AS "regiCertNo",
+		a.unit AS "unit",
+		a.prod_ente_name AS "prodEnteName",
+		a.seri_numb AS "seriNumb",
+		a.vali_peri AS "valiPeri",
+		a.disa_date AS "disaDate",
+		a.stor_time AS "storTime",
+		a.stock_quan AS "stockQuan",
+		a.actu_inve_quan AS "actuInveQuan",
+		a.comm_bar_code AS "commBarCode",
+		a.comm_name AS "commName",
+		a.supp_code AS "suppCode",
+		a.prod_clas AS "prodClas",
+		a.brand AS "brand",
+		a.conv_fact AS "convFact",
+		a.outer_box_fact AS "outerBoxFact",
+		a.reta_price AS "retaPrice",
+		a.which_whole AS "whichWhole",
+		a.which_scat AS "whichScat",
+		a.whole AS "whole",
+		a.scattered AS "scattered",
+		a.total AS "total",
+		a.variance AS "variance",
+		a.curr_inve_cost AS "currInveCost"
+	</sql>
+	
+	<sql id="t02StocMateJoins">
+	</sql>
+    
+	<select id="get" resultType="T02StocMate">
+		SELECT 
+			<include refid="t02StocMateColumns"/>
+		FROM t02_stoc_mate a
+		<include refid="t02StocMateJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="T02StocMate">
+		SELECT 
+			<include refid="t02StocMateColumns"/>
+		FROM t02_stoc_mate a
+		<include refid="t02StocMateJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+				AND a.update_by = #{updateBy.id}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+			<if test="procInsId != null and procInsId != ''">
+				AND a.proc_ins_id = #{procInsId}
+			</if>
+			<if test="location != null and location != ''">
+				AND a.location = #{location}
+			</if>
+			<if test="mateNumb != null and mateNumb != ''">
+				AND a.mate_numb = #{mateNumb}
+			</if>
+			<if test="description != null and description != ''">
+				AND a.description = #{description}
+			</if>
+			<if test="prodName != null and prodName != ''">
+				AND a.prod_name = #{prodName}
+			</if>
+			<if test="modelSpec != null and modelSpec != ''">
+				AND a.model_spec = #{modelSpec}
+			</if>
+			<if test="regiCertNo != null and regiCertNo != ''">
+				AND a.regi_cert_no = #{regiCertNo}
+			</if>
+			<if test="unit != null and unit != ''">
+				AND a.unit = #{unit}
+			</if>
+			<if test="prodEnteName != null and prodEnteName != ''">
+				AND a.prod_ente_name = #{prodEnteName}
+			</if>
+			<if test="seriNumb != null and seriNumb != ''">
+				AND a.seri_numb = #{seriNumb}
+			</if>
+			<if test="valiPeri != null and valiPeri != ''">
+				AND a.vali_peri = #{valiPeri}
+			</if>
+			<if test="disaDate != null and disaDate != ''">
+				AND a.disa_date = #{disaDate}
+			</if>
+			<if test="storTime != null and storTime != ''">
+				AND a.stor_time = #{storTime}
+			</if>
+			<if test="stockQuan != null and stockQuan != ''">
+				AND a.stock_quan = #{stockQuan}
+			</if>
+			<if test="actuInveQuan != null and actuInveQuan != ''">
+				AND a.actu_inve_quan = #{actuInveQuan}
+			</if>
+			<if test="commBarCode != null and commBarCode != ''">
+				AND a.comm_bar_code = #{commBarCode}
+			</if>
+			<if test="commName != null and commName != ''">
+				AND a.comm_name = #{commName}
+			</if>
+			<if test="suppCode != null and suppCode != ''">
+				AND a.supp_code = #{suppCode}
+			</if>
+			<if test="prodClas != null and prodClas != ''">
+				AND a.prod_clas = #{prodClas}
+			</if>
+			<if test="brand != null and brand != ''">
+				AND a.brand = #{brand}
+			</if>
+			<if test="convFact != null and convFact != ''">
+				AND a.conv_fact = #{convFact}
+			</if>
+			<if test="outerBoxFact != null and outerBoxFact != ''">
+				AND a.outer_box_fact = #{outerBoxFact}
+			</if>
+			<if test="retaPrice != null and retaPrice != ''">
+				AND a.reta_price = #{retaPrice}
+			</if>
+			<if test="whichWhole != null and whichWhole != ''">
+				AND a.which_whole = #{whichWhole}
+			</if>
+			<if test="whichScat != null and whichScat != ''">
+				AND a.which_scat = #{whichScat}
+			</if>
+			<if test="whole != null and whole != ''">
+				AND a.whole = #{whole}
+			</if>
+			<if test="scattered != null and scattered != ''">
+				AND a.scattered = #{scattered}
+			</if>
+			<if test="total != null and total != ''">
+				AND a.total = #{total}
+			</if>
+			<if test="variance != null and variance != ''">
+				AND a.variance = #{variance}
+			</if>
+			<if test="currInveCost != null and currInveCost != ''">
+				AND a.curr_inve_cost = #{currInveCost}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="T02StocMate">
+		SELECT 
+			<include refid="t02StocMateColumns"/>
+		FROM t02_stoc_mate a
+		<include refid="t02StocMateJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t02_stoc_mate(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			proc_ins_id,
+			location,
+			mate_numb,
+			description,
+			prod_name,
+			model_spec,
+			regi_cert_no,
+			unit,
+			prod_ente_name,
+			seri_numb,
+			vali_peri,
+			disa_date,
+			stor_time,
+			stock_quan,
+			actu_inve_quan,
+			comm_bar_code,
+			comm_name,
+			supp_code,
+			prod_clas,
+			brand,
+			conv_fact,
+			outer_box_fact,
+			reta_price,
+			which_whole,
+			which_scat,
+			whole,
+			scattered,
+			total,
+			variance,
+			curr_inve_cost
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{procInsId},
+			#{location},
+			#{mateNumb},
+			#{description},
+			#{prodName},
+			#{modelSpec},
+			#{regiCertNo},
+			#{unit},
+			#{prodEnteName},
+			#{seriNumb},
+			#{valiPeri},
+			#{disaDate},
+			#{storTime},
+			#{stockQuan},
+			#{actuInveQuan},
+			#{commBarCode},
+			#{commName},
+			#{suppCode},
+			#{prodClas},
+			#{brand},
+			#{convFact},
+			#{outerBoxFact},
+			#{retaPrice},
+			#{whichWhole},
+			#{whichScat},
+			#{whole},
+			#{scattered},
+			#{total},
+			#{variance},
+			#{currInveCost}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t02_stoc_mate SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			proc_ins_id = #{procInsId},
+			location = #{location},
+			mate_numb = #{mateNumb},
+			description = #{description},
+			prod_name = #{prodName},
+			model_spec = #{modelSpec},
+			regi_cert_no = #{regiCertNo},
+			unit = #{unit},
+			prod_ente_name = #{prodEnteName},
+			seri_numb = #{seriNumb},
+			vali_peri = #{valiPeri},
+			disa_date = #{disaDate},
+			stor_time = #{storTime},
+			stock_quan = #{stockQuan},
+			actu_inve_quan = #{actuInveQuan},
+			comm_bar_code = #{commBarCode},
+			comm_name = #{commName},
+			supp_code = #{suppCode},
+			prod_clas = #{prodClas},
+			brand = #{brand},
+			conv_fact = #{convFact},
+			outer_box_fact = #{outerBoxFact},
+			reta_price = #{retaPrice},
+			which_whole = #{whichWhole},
+			which_scat = #{whichScat},
+			whole = #{whole},
+			scattered = #{scattered},
+			total = #{total},
+			variance = #{variance},
+			curr_inve_cost = #{currInveCost}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t02_stoc_mate SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

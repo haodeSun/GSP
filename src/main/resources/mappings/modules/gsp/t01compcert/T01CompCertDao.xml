@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t01compcert.T01CompCertDao">
+
+	<sql id="t01CompCertColumns">
+		${alias}.id 			AS "${prefix}id",
+		${alias}.create_by 		AS "${prefix}createBy.id",
+		${alias}.create_date 	AS "${prefix}createDate",
+		${alias}.update_by 		AS "${prefix}updateBy.id",
+		${alias}.update_date 	AS "${prefix}updateDate",
+		${alias}.remarks 		AS "${prefix}remarks",
+		${alias}.del_flag 		AS "${prefix}delFlag",
+		${alias}.proc_ins_id 	AS "${prefix}procInsId",
+		${alias}.comp_id 		AS "${prefix}compId",
+		${alias}.cert_nbr 		AS "${prefix}certNbr",
+		${alias}.cert_type 		AS "${prefix}certType",
+		${alias}.cert_name 		AS "${prefix}certName",
+		${alias}.cert_scop 		AS "${prefix}certScop",
+		${alias}.effec_date 	AS "${prefix}effecDate",
+		${alias}.valid_date 	AS "${prefix}validDate",
+		${alias}.cert_stat 		AS "${prefix}certStat",
+		${alias}.appr_stat 		AS "${prefix}apprStat",
+		${alias}.attachment 	AS "${prefix}attachment"
+	</sql>
+
+	<sql id="t01CompCertJoins">
+	</sql>
+
+	<select id="get" resultType="T01CompCert">
+		SELECT
+		<include refid="t01CompCertColumns">
+			<property name="alias" value="a"/>
+			<property name="prefix" value=""/>
+		</include>
+		FROM t01_comp_cert a
+		<include refid="t01CompCertJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="T01CompCert">
+		SELECT
+		<include refid="t01CompCertColumns">
+			<property name="alias" value="a"/>
+			<property name="prefix" value=""/>
+		</include>
+		FROM t01_comp_cert a
+		<include refid="t01CompCertJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks LIKE
+				<if test="dbName == 'oracle'">'%'||#{remarks}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{remarks}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{remarks},'%')</if>
+			</if>
+			<if test="compId != null and compId != ''">
+				AND a.comp_id = #{compId}
+			</if>
+			<if test="certNbr != null and certNbr != ''">
+				AND a.cert_nbr LIKE
+				<if test="dbName == 'oracle'">'%'||#{certNbr}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{certNbr}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{certNbr},'%')</if>
+			</if>
+			<if test="certType != null and certType != ''">
+				AND a.cert_type = #{certType}
+			</if>
+			<if test="certName != null and certName != ''">
+				AND a.cert_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{certName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{certName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{certName},'%')</if>
+			</if>
+			<if test="certScop != null and certScop != ''">
+				AND a.cert_scop LIKE
+				<if test="dbName == 'oracle'">'%'||#{certScop}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{certScop}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{certScop},'%')</if>
+			</if>
+			<if test="effecDate != null and effecDate != ''">
+				AND a.effec_date &gt;= #{effecDate}
+			</if>
+			<if test="validDate != null and validDate != ''">
+				AND a.valid_date &lt;= #{validDate}
+			</if>
+			<if test="certStat != null and certStat != ''">
+				AND a.cert_stat = #{certStat}
+			</if>
+			<if test="apprStat != null and apprStat != ''">
+				AND a.appr_stat = #{apprStat}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="T01CompCert">
+		SELECT
+		<include refid="t01CompCertColumns">
+			<property name="alias" value="a"/>
+			<property name="prefix" value=""/>
+		</include>
+		FROM t01_comp_cert a
+		<include refid="t01CompCertJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO t01_comp_cert(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			proc_ins_id,
+			comp_id,
+			cert_nbr,
+			cert_type,
+			cert_name,
+			cert_scop,
+			effec_date,
+			valid_date,
+			cert_stat,
+			appr_stat,
+			attachment
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{procInsId},
+			#{compId},
+			#{certNbr},
+			#{certType},
+			#{certName},
+			#{certScop},
+			#{effecDate},
+			#{validDate},
+			#{certStat},
+			#{apprStat},
+			#{attachment}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE t01_comp_cert SET
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			proc_ins_id = #{procInsId},
+			comp_id = #{compId},
+			cert_nbr = #{certNbr},
+			cert_type = #{certType},
+			cert_name = #{certName},
+			cert_scop = #{certScop},
+			effec_date = #{effecDate},
+			valid_date = #{validDate},
+			cert_stat = #{certStat},
+			appr_stat = #{apprStat},
+			attachment = #{attachment}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE t01_comp_cert SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<update id="replaceCompIdByCertType">
+		update t01_comp_cert set comp_id= #{0} where comp_id= #{1} and cert_type= #{2} and del_flag='0'
+	</update>
+
+	<update id="deleteByCompIdAndCertType">
+		update t01_comp_cert set del_flag='1' where comp_id= #{0} and cert_type= #{1}
+	</update>
+
+</mapper>

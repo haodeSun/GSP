@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t01company.T01CompanyDao">
+    
+	<sql id="t01CompanyColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.proc_ins_id AS "procInsId",
+		a.comp_numb AS "compNumb",
+		a.comp_name_cn AS "compNameCn",
+		a.comp_name_en AS "compNameEn",
+		a.abbreviation AS "abbreviation",
+		a.description AS "description",
+		a.regi_numb AS "regiNumb",
+		a.appr_date AS "apprDate",
+		a.valid_peri_to AS "validPeriTo",
+		a.busi_scope AS "busiScope",
+		a.attachment AS "attachment"
+	</sql>
+	
+	<sql id="t01CompanyJoins">
+	</sql>
+    
+	<select id="get" resultType="T01Company">
+		SELECT 
+			<include refid="t01CompanyColumns"/>
+		FROM t01_company a
+		<include refid="t01CompanyJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="T01Company">
+		SELECT 
+			<include refid="t01CompanyColumns"/>
+		FROM t01_company a
+		<include refid="t01CompanyJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+				AND a.update_by = #{updateBy.id}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+			<if test="delFlag != null and delFlag != ''">
+				AND a.del_flag = #{delFlag}
+			</if>
+			<if test="procInsId != null and procInsId != ''">
+				AND a.proc_ins_id = #{procInsId}
+			</if>
+			<if test="compNumb != null and compNumb != ''">
+				AND a.comp_numb = #{compNumb}
+			</if>
+			<if test="compNameCn != null and compNameCn != ''">
+				AND a.comp_name_cn = #{compNameCn}
+			</if>
+			<if test="compNameEn != null and compNameEn != ''">
+				AND a.comp_name_en = #{compNameEn}
+			</if>
+			<if test="abbreviation != null and abbreviation != ''">
+				AND a.abbreviation = #{abbreviation}
+			</if>
+			<if test="description != null and description != ''">
+				AND a.description = #{description}
+			</if>
+			<if test="regiNumb != null and regiNumb != ''">
+				AND a.regi_numb = #{regiNumb}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="T01Company">
+		SELECT 
+			<include refid="t01CompanyColumns"/>
+		FROM t01_company a
+		<include refid="t01CompanyJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t01_company(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			proc_ins_id,
+			comp_numb,
+			comp_name_cn,
+			comp_name_en,
+			abbreviation,
+			description,
+			regi_numb,
+			appr_date,
+			valid_peri_to,
+			busi_scope,
+			attachment
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{procInsId},
+			#{compNumb},
+			#{compNameCn},
+			#{compNameEn},
+			#{abbreviation},
+			#{description},
+			#{regiNumb},
+			#{apprDate},
+			#{validPeriTo},
+			#{busiScope},
+			#{attachment}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t01_company SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			proc_ins_id = #{procInsId},
+			comp_numb = #{compNumb},
+			comp_name_cn = #{compNameCn},
+			comp_name_en = #{compNameEn},
+			abbreviation = #{abbreviation},
+			description = #{description},
+			regi_numb = #{regiNumb},
+			appr_date = #{apprDate},
+			valid_peri_to = #{validPeriTo},
+			busi_scope = #{busiScope},
+			attachment = #{attachment}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t01_company SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

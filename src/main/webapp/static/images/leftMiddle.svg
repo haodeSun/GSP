@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="184px" height="50px" viewBox="0 0 184 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <linearGradient x1="19.9965847%" y1="0%" x2="100%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#FFFFFF" stop-opacity="0.398352582" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Custom-Preset-Copy" transform="translate(0.000000, -146.000000)">
+            <g id="sidebar" transform="translate(0.000000, 50.000000)">
+                <g id="3级菜单BG-改" transform="translate(0.000000, 96.000000)">
+                    <rect id="3级菜单BG" fill="#2D353C" x="0" y="0" width="184" height="50"></rect>
+                    <rect id="2级菜单-白条渐变-copy" fill="url(#linearGradient-1)" x="0" y="49" width="183" height="1"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

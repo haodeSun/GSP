@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t01aggrmatr.T01AggrMatrDao">
+    
+	<sql id="t01AggrMatrColumns">
+		${alias}.id 			AS "${prefix}id",
+		${alias}.create_by 		AS "${prefix}createBy.id",
+		${alias}.create_date 	AS "${prefix}createDate",
+		${alias}.update_by 		AS "${prefix}updateBy.id",
+		${alias}.del_flag 		AS "${prefix}delFlag",
+		${alias}.proc_ins_id 	AS "${prefix}procInsId",
+		${alias}.aggr_id 		AS "${prefix}aggrId",
+		${alias}.matr_id 		AS "${prefix}matr.id",
+		${alias}.price 			AS "${prefix}price",
+		${alias}.remarks 		AS "${prefix}remarks",
+		${alias}.update_date 	AS "${prefix}updateDate"
+	</sql>
+	
+	<sql id="t01AggrMatrJoins">
+	</sql>
+    
+	<select id="get" resultType="T01AggrMatr">
+		SELECT 
+			<include refid="t01AggrMatrColumns">
+				<property name="alias" value="a"/>
+				<property name="prefix" value=""/>
+			</include>
+		FROM t01_aggr_matr a
+		<include refid="t01AggrMatrJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="T01AggrMatr">
+		SELECT
+		<include refid="t01AggrMatrColumns">
+			<property name="alias" value="a"/>
+			<property name="prefix" value=""/>
+		</include>
+		FROM t01_aggr_matr a
+		<include refid="t01AggrMatrJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="aggrId != null and aggrId != ''">
+				AND a.aggr_id = #{aggrId}
+			</if>
+			<if test="matr != null and matr.id != ''">
+				AND a.matr_id = #{matr.id}
+			</if>
+			<if test="price != null and price != ''">
+				AND a.price = #{price}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="T01AggrMatr">
+		SELECT
+		<include refid="t01AggrMatrColumns">
+			<property name="alias" value="a"/>
+			<property name="prefix" value=""/>
+		</include>
+		FROM t01_aggr_matr a
+		<include refid="t01AggrMatrJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t01_aggr_matr(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			del_flag,
+			proc_ins_id,
+			aggr_id,
+			matr_id,
+			price,
+			remarks,
+			update_date
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{delFlag},
+			#{procInsId},
+			#{aggrId},
+			#{matr.id},
+			#{price},
+			#{remarks},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t01_aggr_matr SET 	
+			update_by = #{updateBy.id},
+			proc_ins_id = #{procInsId},
+			aggr_id = #{aggrId},
+			matr_id = #{matr.id},
+			price = #{price},
+			remarks = #{remarks},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t01_aggr_matr SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+</mapper>

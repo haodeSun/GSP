@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t01prodcert.T01ProdCertDao">
+    
+	<sql id="t01ProdCertColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.proc_ins_id AS "procInsId",
+		a.regi_cert_nbr AS "regiCertNbr",
+		a.orig_regi_cert_nbr AS "origRegiCertNbr",
+		a.risk_class AS "riskClass",
+		a.tech_cate_cd AS "techCateCd",
+		a.appr_date AS "apprDate",
+		a.effe_date AS "effeDate",
+		a.valid_peri AS "validPeri",
+		a.prod_name_cn AS "prodNameCn",
+		a.prod_name_en AS "prodNameEn",
+		a.is_import AS "isImport",
+		a.model_spec AS "modelSpec",
+		a.stru_comp AS "struComp",
+		a.main_mnt AS "mainMnt",
+		a.expe_usage AS "expeUsage",
+		a.use_scope AS "useScope",
+		a.effi_date AS "effiDate",
+		a.prod_stat AS "prodStat",
+		a.stor_cond AS "storCond",
+		a.tran_cond AS "tranCond",
+		a.regi_pers_name AS "regiPersName",
+		a.regi_pers_name_tran AS "regiPersNameTran",
+		a.regi_pers_addr AS "regiPersAddr",
+		a.regi_pers_cont AS "regiPersCont",
+		a.produ_addr AS "produAddr",
+		a.produ_area_cn AS "produAreaCn",
+		a.produ_area_en AS "produAreaEn",
+		a.produ_fact_cn AS "produFactCn",
+		a.appr_org AS "apprOrg",
+		a.agent_name AS "agentName",
+		a.agent_addr AS "agentAddr",
+		a.agent_cont AS "agentCont",
+		a.saled_serv_org AS "saledServOrg",
+		a.prod_tech_requ AS "prodTechRequ",
+		a.prod_spec AS "prodSpec",
+		a.others AS "others",
+		a.cert_type AS "certType",
+		a.cert_stat AS "certStat",
+		a.appr_stat AS "apprStat",
+		a.appr_opin AS "apprOpin",
+		a.explanation AS "explanation",
+		a.attachment AS "attachment",
+		a.regi_cert_nbrs AS "regiCertNbrs",
+		a.isappr AS "isappr"
+	</sql>
+
+	<sql id="t01ProdCertJoins">
+	</sql>
+
+	<select id="get" resultType="T01ProdCert">
+		SELECT
+			<include refid="t01ProdCertColumns"/>
+		FROM t01_prod_cert a
+		<include refid="t01ProdCertJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="T01ProdCert">
+		select
+			<include refid="t01ProdCertColumns"/>
+		from t01_prod_cert a
+		<include refid="t01ProdCertJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="updateDate != null">
+				AND a.update_date LIKE concat(DATE_FORMAT(#{updateDate}, '%Y-%m-%d'),'%')
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks LIKE
+				<if test="dbName == 'oracle'">'%'||#{remarks}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{remarks}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{remarks},'%')</if>
+			</if>
+			<if test="regiCertNbr != null and regiCertNbr != ''">
+				AND a.regi_cert_nbr LIKE
+				<if test="dbName == 'oracle'">'%'||#{regiCertNbr}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{regiCertNbr}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{regiCertNbr},'%')</if>
+			</if>
+			<if test="origRegiCertNbr != null and origRegiCertNbr != ''">
+				AND a.orig_regi_cert_nbr LIKE
+				<if test="dbName == 'oracle'">'%'||#{origRegiCertNbr}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{origRegiCertNbr}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{origRegiCertNbr},'%')</if>
+			</if>
+			<if test="riskClass != null and riskClass != ''">
+				AND a.risk_class = #{riskClass}
+			</if>
+			<if test="techCateCd != null and techCateCd != ''">
+				AND a.tech_cate_cd LIKE
+				<if test="dbName == 'oracle'">'%'||#{techCateCd}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{techCateCd}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{techCateCd},'%')</if>
+			</if>
+			<if test="apprDate != null">
+				AND a.appr_date LIKE
+				<if test="dbName == 'oracle'">'%'||#{apprDate}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{apprDate}+'%'</if>
+				<if test="dbName == 'mysql'">concat(DATE_FORMAT(#{apprDate}, '%Y-%m-%d'),'%')</if>
+			</if>
+			<if test="effeDate != null">
+				AND a.effe_date LIKE
+				<if test="dbName == 'oracle'">'%'||#{effeDate}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{effeDate}+'%'</if>
+				<if test="dbName == 'mysql'">concat(DATE_FORMAT(#{effeDate}, '%Y-%m-%d'),'%')</if>
+			</if>
+			<if test="validPeri != null">
+				AND a.valid_peri LIKE
+				<if test="dbName == 'oracle'">'%'||#{validPeri}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{validPeri}+'%'</if>
+				<if test="dbName == 'mysql'">concat(DATE_FORMAT(#{validPeri}, '%Y-%m-%d'),'%')</if>
+			</if>
+			<if test="prodNameCn != null and prodNameCn != ''">
+				AND a.prod_name_cn LIKE
+				<if test="dbName == 'oracle'">'%'||#{prodNameCn}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{prodNameCn}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{prodNameCn},'%')</if>
+			</if>
+			<if test="prodNameEn != null and prodNameEn != ''">
+				AND a.prod_name_en LIKE
+				<if test="dbName == 'oracle'">'%'||#{prodNameEn}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{prodNameEn}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{prodNameEn},'%')</if>
+			</if>
+			<if test="isImport != null and isImport != ''">
+				AND a.is_import = #{isImport}
+			</if>
+			<if test="modelSpec != null and modelSpec != ''">
+				AND a.model_spec LIKE
+				<if test="dbName == 'oracle'">'%'||#{modelSpec}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{modelSpec}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{modelSpec},'%')</if>
+			</if>
+			<if test="struComp != null and struComp != ''">
+				AND a.stru_comp LIKE
+				<if test="dbName == 'oracle'">'%'||#{struComp}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{struComp}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{struComp},'%')</if>
+			</if>
+			<if test="mainMnt != null and mainMnt != ''">
+				AND a.main_mnt LIKE
+				<if test="dbName == 'oracle'">'%'||#{mainMnt}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{mainMnt}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{mainMnt},'%')</if>
+			</if>
+			<if test="expeUsage != null and expeUsage != ''">
+				AND a.expe_usage LIKE
+				<if test="dbName == 'oracle'">'%'||#{expeUsage}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{expeUsage}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{expeUsage},'%')</if>
+			</if>
+			<if test="useScope != null and useScope != ''">
+				AND a.use_scope LIKE
+				<if test="dbName == 'oracle'">'%'||#{useScope}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{useScope}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{useScope},'%')</if>
+			</if>
+			<if test="effiDate != null and effiDate != ''">
+				AND a.effi_date = convert(#{effiDate},SIGNED)
+			</if>
+			<if test="storCond != null and storCond != ''">
+				AND a.stor_cond LIKE
+				<if test="dbName == 'oracle'">'%'||#{storCond}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{storCond}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{storCond},'%')</if>
+			</if>
+			<if test="tranCond != null and tranCond != ''">
+				AND a.tran_cond LIKE
+				<if test="dbName == 'oracle'">'%'||#{tranCond}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{tranCond}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{tranCond},'%')</if>
+			</if>
+			<if test="regiPersName != null and regiPersName != ''">
+				AND a.regi_pers_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{regiPersName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{regiPersName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{regiPersName},'%')</if>
+			</if>
+			<if test="regiPersNameTran != null and regiPersNameTran != ''">
+				AND a.regi_pers_name_tran LIKE
+				<if test="dbName == 'oracle'">'%'||#{regiPersNameTran}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{regiPersNameTran}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{regiPersNameTran},'%')</if>
+			</if>
+			<if test="regiPersAddr != null and regiPersAddr != ''">
+				AND a.regi_pers_addr LIKE
+				<if test="dbName == 'oracle'">'%'||#{regiPersAddr}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{regiPersAddr}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{regiPersAddr},'%')</if>
+			</if>
+			<if test="regiPersCont != null and regiPersCont != ''">
+				AND a.regi_pers_cont LIKE
+				<if test="dbName == 'oracle'">'%'||#{regiPersCont}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{regiPersCont}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{regiPersCont},'%')</if>
+			</if>
+			<if test="produAddr != null and produAddr != ''">
+				AND a.produ_addr LIKE
+				<if test="dbName == 'oracle'">'%'||#{produAddr}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{produAddr}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{produAddr},'%')</if>
+			</if>
+			<if test="produAreaCn != null and produAreaCn != ''">
+				AND a.produ_area_cn LIKE
+				<if test="dbName == 'oracle'">'%'||#{produAreaCn}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{produAreaCn}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{produAreaCn},'%')</if>
+			</if>
+			<if test="produAreaEn != null and produAreaEn != ''">
+				AND a.produ_area_en LIKE
+				<if test="dbName == 'oracle'">'%'||#{produAreaEn}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{produAreaEn}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{produAreaEn},'%')</if>
+			</if>
+			<if test="produFactCn != null and produFactCn != ''">
+				AND a.produ_fact_cn LIKE
+				<if test="dbName == 'oracle'">'%'||#{produFactCn}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{produFactCn}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{produFactCn},'%')</if>
+			</if>
+			<if test="agentName != null and agentName != ''">
+				AND a.agent_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{agentName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{agentName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{agentName},'%')</if>
+			</if>
+			<if test="agentAddr != null and agentAddr != ''">
+				AND a.agent_addr LIKE
+				<if test="dbName == 'oracle'">'%'||#{agentAddr}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{agentAddr}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{agentAddr},'%')</if>
+			</if>
+			<if test="agentCont != null and agentCont != ''">
+				AND a.agent_cont LIKE
+				<if test="dbName == 'oracle'">'%'||#{agentCont}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{agentCont}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{agentCont},'%')</if>
+			</if>
+			<if test="saledServOrg != null and saledServOrg != ''">
+				AND a.saled_serv_org LIKE
+				<if test="dbName == 'oracle'">'%'||#{saledServOrg}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{saledServOrg}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{saledServOrg},'%')</if>
+			</if>
+			<if test="certType != null and certType != ''">
+				AND a.cert_type = #{certType}
+			</if>
+			<if test="certStat != null and certStat != ''">
+				AND a.cert_stat = #{certStat}
+			</if>
+			<if test="apprStat != null and apprStat != ''">
+				AND a.appr_stat = #{apprStat}
+			</if>
+			<if test="explanation != null and explanation != ''">
+				AND a.explanation LIKE
+				<if test="dbName == 'oracle'">'%'||#{explanation}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{explanation}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{explanation},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY (case when appr_stat='0' then 1
+				when appr_stat='1' then 2
+				when appr_stat='3' then 3
+				when appr_stat='2' then 4 end),
+				a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="T01ProdCert">
+		SELECT
+			<include refid="t01ProdCertColumns"/>
+		FROM t01_prod_cert a
+		<include refid="t01ProdCertJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO t01_prod_cert(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			proc_ins_id,
+			regi_cert_nbr,
+			orig_regi_cert_nbr,
+			risk_class,
+			tech_cate_cd,
+			appr_date,
+			effe_date,
+			valid_peri,
+			prod_name_cn,
+			prod_name_en,
+			is_import,
+			model_spec,
+			stru_comp,
+			main_mnt,
+			expe_usage,
+			use_scope,
+			effi_date,
+			prod_stat,
+			stor_cond,
+			tran_cond,
+			regi_pers_name,
+			regi_pers_name_tran,
+			regi_pers_addr,
+			regi_pers_cont,
+			produ_addr,
+			produ_area_cn,
+			produ_area_en,
+			produ_fact_cn,
+			appr_org,
+			agent_name,
+			agent_addr,
+			agent_cont,
+			saled_serv_org,
+			prod_tech_requ,
+			prod_spec,
+			others,
+			cert_type,
+			cert_stat,
+			appr_stat,
+			appr_opin,
+			explanation,
+			attachment,
+			regi_cert_nbrs,
+			isappr
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{procInsId},
+			#{regiCertNbr},
+			#{origRegiCertNbr},
+			#{riskClass},
+			#{techCateCd},
+			#{apprDate},
+			#{effeDate},
+			#{validPeri},
+			#{prodNameCn},
+			#{prodNameEn},
+			#{isImport},
+			#{modelSpec},
+			#{struComp},
+			#{mainMnt},
+			#{expeUsage},
+			#{useScope},
+			#{effiDate},
+			#{prodStat},
+			#{storCond},
+			#{tranCond},
+			#{regiPersName},
+			#{regiPersNameTran},
+			#{regiPersAddr},
+			#{regiPersCont},
+			#{produAddr},
+			#{produAreaCn},
+			#{produAreaEn},
+			#{produFactCn},
+			#{apprOrg},
+			#{agentName},
+			#{agentAddr},
+			#{agentCont},
+			#{saledServOrg},
+			#{prodTechRequ},
+			#{prodSpec},
+			#{others},
+			#{certType},
+			#{certStat},
+			#{apprStat},
+			#{apprOpin},
+			#{explanation},
+			#{attachment},
+			#{regiCertNbrs},
+			#{isappr}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE t01_prod_cert SET
+			update_by = #{updateBy.id},
+		    update_date = #{updateDate},
+			remarks = #{remarks},
+			regi_cert_nbr = #{regiCertNbr},
+			orig_regi_cert_nbr = #{origRegiCertNbr},
+			risk_class = #{riskClass},
+			tech_cate_cd = #{techCateCd},
+			appr_date = #{apprDate},
+			effe_date = #{effeDate},
+			valid_peri = #{validPeri},
+			prod_name_cn = #{prodNameCn},
+			prod_name_en = #{prodNameEn},
+			is_import = #{isImport},
+			model_spec = #{modelSpec},
+			stru_comp = #{struComp},
+			main_mnt = #{mainMnt},
+			expe_usage = #{expeUsage},
+			use_scope = #{useScope},
+			effi_date = #{effiDate},
+			stor_cond = #{storCond},
+			tran_cond = #{tranCond},
+			regi_pers_name = #{regiPersName},
+			regi_pers_name_tran = #{regiPersNameTran},
+			regi_pers_addr = #{regiPersAddr},
+			regi_pers_cont = #{regiPersCont},
+			produ_addr = #{produAddr},
+			produ_area_cn = #{produAreaCn},
+			produ_area_en = #{produAreaEn},
+			produ_fact_cn = #{produFactCn},
+			appr_org = #{apprOrg},
+			agent_name = #{agentName},
+			agent_addr = #{agentAddr},
+			agent_cont = #{agentCont},
+			saled_serv_org = #{saledServOrg},
+			prod_tech_requ = #{prodTechRequ},
+			prod_spec = #{prodSpec},
+			others = #{others},
+			cert_type = #{certType},
+			cert_stat = #{certStat},
+			appr_stat = #{apprStat},
+			appr_opin = #{apprOpin},
+			explanation = #{explanation},
+			attachment = #{attachment},
+			regi_cert_nbrs = #{regiCertNbrs},
+			isappr = #{isappr}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t01_prod_cert SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

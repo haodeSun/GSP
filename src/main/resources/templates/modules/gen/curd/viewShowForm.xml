@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+	<name>viewForm</name>
+	<filePath>src/main/webapp/WEB-INF/views/${lastPackageName}/${moduleName}/${subModuleName}</filePath>
+	<fileName>${className}ShowForm.jsp</fileName>
+	<content><![CDATA[
+
+	<form id="inputForm" class="form-horizontal">
+		<div class="table-scrollable">
+			<ul class="nav nav-tabs" role="tablist">
+			<#--如果分组列表存在并且有内容-->
+		<#if groupList?has_content>
+		<#--遍历分组-->
+			<#list groupList as group>
+			 <#--如果有组名，则可以认为需要产生分组标签-->
+				<#if group.groupName?has_content  >
+				<#--分组第一个需要设置active-->
+				<li role="presentation" <#if group?is_first > class="active"</#if>>
+					<a href="#p${group_index}" role="tab" data-toggle="tab">
+					<#--输出组名-->
+     					${group.groupName}
+   					</a>
+				</li>
+				</#if>
+			</#list>
+		</#if>
+			</ul>
+			<div class="tab-content">
+			<#--如果分组列表存在并且有内容-->
+		<#if groupList?has_content>
+			<#list groupList as group>
+				<div role="tabpanel"  class=
+				<#--如果有组名并且是第一个，就设置为活动页-->
+				<#if group.groupName?has_content>
+					<#if group?is_first>
+						"tab-pane fade in active"
+					<#else>
+						"tab-pane fade"
+					</#if>
+				<#else>
+					"tab-pane fade in active"
+				</#if>
+				
+				 id="p${group_index}">
+					<#list group.columns as column>
+					<#if column.isEdit?? && column.isEdit == "1" && (column.isNotBaseField || column.simpleJavaField == 'remarks')>
+							
+								<div class="control-group">
+									<label class="control-label">${column.comments}：</label>
+									<div class="controls">
+									<#if column.showType == "input">
+										<input class="input-xlarge " type="text" disabled="true" value="${"$"}{${className}.${column.javaFieldId}}"/>
+									<#elseif column.showType == "textarea">
+										<textarea value="${"$"}{${className}.${column.javaFieldId}}" htmlEscape="false" rows="4"<#if column.dataLength != "0"> maxlength="${column.dataLength}"</#if> class="input-xxlarge <#if column.isNull != "1">required</#if>"/>
+									<#elseif column.showType == "select">
+										<input class="input-xlarge " type="text" disabled="true" value="${"$"}{getDictLabel(${className}.${column.javaFieldId},'${column.dictType}','')}"/>
+									<#elseif column.showType == "checkbox">
+										<checkboxes path="${column.javaFieldId}" items="${"$"}{fns:getDictList('${className}.${column.javaFieldId}')}" itemLabel="label" itemValue="value" htmlEscape="false" class="<#if column.isNull != "1">required</#if>"/>
+									<#elseif column.showType == "radiobox">
+										<radiobuttons path="${column.javaFieldId}" items="${"$"}{fns:getDictList('${className}.${column.javaFieldId}')}" itemLabel="label" itemValue="value" htmlEscape="false" class="<#if column.isNull != "1">required</#if>"/>
+									<#elseif column.showType == "dateselect">
+										<input class="input-xlarge " type="text" disabled="true" value="${"$"}{${className}.${column.javaFieldId}?string("yyyy-MM-dd HH:mm:ss")}"/>
+									<#elseif column.showType == "fileselect">
+										<div>${"$"}{getAttachLabel(${className}.${column.javaFieldId})}</div>
+									</#if>
+									</div>
+								</div>
+							
+						</#if>
+				</#list>
+							</div>
+			</#list>
+		</#if>
+			</div>
+
+		</div>
+	</form>
+
+		]]>
+	</content>
+</template>

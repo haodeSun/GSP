@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t02rejected.T02RejectedDao">
+    
+	<sql id="t02RejectedColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.proc_ins_id AS "procInsId",
+		a.sour_no AS "sourNo",
+		a.orga_code AS "orgaCode",
+		a.cust_no AS "custNo",
+		a.sale_repr_code AS "saleReprCode",
+		a.ware_code AS "wareCode",
+		a.auto_no AS "autoNo",
+		a.retu_meth AS "retuMeth",
+		a.retu_reas AS "retuReas",
+		a.alf AS "alf",
+		a.comm AS "comm",
+		a.bill_date AS "billDate",
+		a.bill_effe_date AS "billEffeDate",
+		a.tax_amou AS "taxAmou",
+		a.tota_box_coun AS "totaBoxCoun",
+		a.tota_bran_coun AS "totaBranCoun"
+	</sql>
+	
+	<sql id="t02RejectedJoins">
+	</sql>
+    
+	<select id="get" resultType="T02Rejected">
+		SELECT 
+			<include refid="t02RejectedColumns"/>
+		FROM t02_rejected a
+		<include refid="t02RejectedJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="T02Rejected">
+		SELECT 
+			<include refid="t02RejectedColumns"/>
+		FROM t02_rejected a
+		<include refid="t02RejectedJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+				AND a.update_by = #{updateBy.id}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+			<if test="procInsId != null and procInsId != ''">
+				AND a.proc_ins_id = #{procInsId}
+			</if>
+			<if test="sourNo != null and sourNo != ''">
+				AND a.sour_no = #{sourNo}
+			</if>
+			<if test="orgaCode != null and orgaCode != ''">
+				AND a.orga_code = #{orgaCode}
+			</if>
+			<if test="custNo != null and custNo != ''">
+				AND a.cust_no = #{custNo}
+			</if>
+			<if test="saleReprCode != null and saleReprCode != ''">
+				AND a.sale_repr_code = #{saleReprCode}
+			</if>
+			<if test="wareCode != null and wareCode != ''">
+				AND a.ware_code = #{wareCode}
+			</if>
+			<if test="autoNo != null and autoNo != ''">
+				AND a.auto_no = #{autoNo}
+			</if>
+			<if test="retuMeth != null and retuMeth != ''">
+				AND a.retu_meth = #{retuMeth}
+			</if>
+			<if test="retuReas != null and retuReas != ''">
+				AND a.retu_reas = #{retuReas}
+			</if>
+			<if test="alf != null and alf != ''">
+				AND a.alf = #{alf}
+			</if>
+			<if test="comm != null and comm != ''">
+				AND a.comm = #{comm}
+			</if>
+			<if test="billDate != null and billDate != ''">
+				AND a.bill_date = #{billDate}
+			</if>
+			<if test="billEffeDate != null and billEffeDate != ''">
+				AND a.bill_effe_date = #{billEffeDate}
+			</if>
+			<if test="taxAmou != null and taxAmou != ''">
+				AND a.tax_amou = #{taxAmou}
+			</if>
+			<if test="totaBoxCoun != null and totaBoxCoun != ''">
+				AND a.tota_box_coun = #{totaBoxCoun}
+			</if>
+			<if test="totaBranCoun != null and totaBranCoun != ''">
+				AND a.tota_bran_coun = #{totaBranCoun}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="T02Rejected">
+		SELECT 
+			<include refid="t02RejectedColumns"/>
+		FROM t02_rejected a
+		<include refid="t02RejectedJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t02_rejected(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			proc_ins_id,
+			sour_no,
+			orga_code,
+			cust_no,
+			sale_repr_code,
+			ware_code,
+			auto_no,
+			retu_meth,
+			retu_reas,
+			alf,
+			comm,
+			bill_date,
+			bill_effe_date,
+			tax_amou,
+			tota_box_coun,
+			tota_bran_coun
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{procInsId},
+			#{sourNo},
+			#{orgaCode},
+			#{custNo},
+			#{saleReprCode},
+			#{wareCode},
+			#{autoNo},
+			#{retuMeth},
+			#{retuReas},
+			#{alf},
+			#{comm},
+			#{billDate},
+			#{billEffeDate},
+			#{taxAmou},
+			#{totaBoxCoun},
+			#{totaBranCoun}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t02_rejected SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			proc_ins_id = #{procInsId},
+			sour_no = #{sourNo},
+			orga_code = #{orgaCode},
+			cust_no = #{custNo},
+			sale_repr_code = #{saleReprCode},
+			ware_code = #{wareCode},
+			auto_no = #{autoNo},
+			retu_meth = #{retuMeth},
+			retu_reas = #{retuReas},
+			alf = #{alf},
+			comm = #{comm},
+			bill_date = #{billDate},
+			bill_effe_date = #{billEffeDate},
+			tax_amou = #{taxAmou},
+			tota_box_coun = #{totaBoxCoun},
+			tota_bran_coun = #{totaBranCoun}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t02_rejected SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

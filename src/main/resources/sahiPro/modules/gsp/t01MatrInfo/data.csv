@@ -1,0 +1,17 @@
+"login","username","password"
+,"物料录入员","123456"
+
+"MatrInfo","matrNbr","matrNmCn","matrNmEn","matrDesc","matrType","remarks","priceUnit","matrPrice"
+,"MATR-001","物料001","matr001","描述1","医疗器械","备注1","人民币","1"
+,"MATR-002","物料002","matr002","描述2","医疗器械","备注2","人民币","2"
+,"MATR-003","物料003","matr003","描述3","医疗器械","备注3","美元","3"
+,"MATR-004","物料004","matr004","描述4","医疗器械","备注4","美元","4"
+
+"searchByOneInputCondition","type","condition","inputValue","resultCount","resultValue"
+,"_link","物料号","MATR-001","1","/^.*MATR-001.*$/"
+,"_cell","物料名称（中文）","物料002","1","/^.*物料002.*$/"
+,"_cell","物料名称（英文）","matr003","1","/^.*matr003.*$/"
+,"_cell","描述",,"4","/^.*$/"
+,"_cell","备注","备注","4","/^.*备注.*$/"
+,"_cell","货币单位","人民币","2","/^.*人民币.*$/"
+,"_cell","物料单价","1","1","/^.*1.*$/"

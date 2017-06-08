@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.sysusernotice.SysUserNoticeDao">
+    
+	<sql id="sysUserNoticeColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.proc_ins_id AS "procInsId",
+		a.notice_title AS "noticeTitle",
+		a.notice_type AS "noticeType",
+		a.content AS "content",
+		a.notice_status AS "noticeStatus",
+		a.push_user AS "pushUser",
+		a.attach AS "attach"
+	</sql>
+	
+	<sql id="sysUserNoticeJoins">
+	</sql>
+    
+	<select id="get" resultType="SysUserNotice">
+		SELECT 
+			<include refid="sysUserNoticeColumns"/>
+		FROM sys_user_notice a
+		<include refid="sysUserNoticeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SysUserNotice">
+		SELECT 
+			<include refid="sysUserNoticeColumns"/>
+		FROM sys_user_notice a
+		<include refid="sysUserNoticeJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+				AND a.update_by = #{updateBy.id}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks = #{remarks}
+			</if>
+			<if test="procInsId != null and procInsId != ''">
+				AND a.proc_ins_id = #{procInsId}
+			</if>
+			<if test="noticeTitle != null and noticeTitle != ''">
+				AND a.notice_title = #{noticeTitle}
+			</if>
+			<if test="noticeType != null and noticeType != ''">
+				AND a.notice_type = #{noticeType}
+			</if>
+			<if test="content != null and content != ''">
+				AND a.content = #{content}
+			</if>
+			<if test="noticeStatus != null and noticeStatus != ''">
+				AND a.notice_status = #{noticeStatus}
+			</if>
+			<if test="pushUser != null and pushUser != ''">
+				AND a.push_user = #{pushUser}
+			</if>
+			<if test="attach != null and attach != ''">
+				AND a.attach = #{attach}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SysUserNotice">
+		SELECT 
+			<include refid="sysUserNoticeColumns"/>
+		FROM sys_user_notice a
+		<include refid="sysUserNoticeJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sys_user_notice(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			proc_ins_id,
+			notice_title,
+			notice_type,
+			content,
+			notice_status,
+			push_user,
+			attach
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{procInsId},
+			#{noticeTitle},
+			#{noticeType},
+			#{content},
+			#{noticeStatus},
+			#{pushUser},
+			#{attach}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sys_user_notice SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			proc_ins_id = #{procInsId},
+			notice_title = #{noticeTitle},
+			notice_type = #{noticeType},
+			content = #{content},
+			notice_status = #{noticeStatus},
+			push_user = #{pushUser},
+			attach = #{attach}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE sys_user_notice SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

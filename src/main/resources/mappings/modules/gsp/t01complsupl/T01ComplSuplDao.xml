@@ -1,0 +1,650 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t01complsupl.T01ComplSuplDao">
+
+
+	<!--<sql id="compCertColumns">-->
+		<!--${tableName}.id AS "${entityName}.id",-->
+		<!--${tableName}.create_by AS "${entityName}.createBy.id",-->
+		<!--${tableName}.create_date AS "${entityName}.createDate",-->
+		<!--${tableName}.update_by AS "${entityName}.updateBy.id",-->
+		<!--${tableName}.update_date AS "${entityName}.updateDate",-->
+		<!--${tableName}.remarks AS "${entityName}.remarks",-->
+		<!--${tableName}.del_flag AS "${entityName}.delFlag",-->
+		<!--${tableName}.proc_ins_id AS "${entityName}.procInsId",-->
+		<!--${tableName}.comp_id AS "${entityName}.compId",-->
+		<!--${tableName}.cert_nbr AS "${entityName}.certNbr",-->
+		<!--${tableName}.cert_type AS "${entityName}.certType",-->
+		<!--${tableName}.cert_name AS "${entityName}.certName",-->
+		<!--${tableName}.cert_scop AS "${entityName}.certScop",-->
+		<!--${tableName}.effec_date AS "${entityName}.effecDate",-->
+		<!--${tableName}.valid_date AS "${entityName}.validDate",-->
+		<!--${tableName}.cert_stat AS "${entityName}.certStat",-->
+		<!--${tableName}.appr_stat AS "${entityName}.apprStat",-->
+		<!--${tableName}.attachment AS "${entityName}.attachment"-->
+	<!--</sql>-->
+
+
+
+
+
+	<sql id="t01ComplSuplColumns">
+        a.cert_type 			        AS "certType",
+		a.id          					AS "id",
+		a.create_by   					AS "createBy.id",
+		a.create_date 					AS "createDate",
+		a.update_by   					AS "updateBy.id",
+		a.update_date 					AS "updateDate",
+		a.remarks     					AS "remarks",
+		a.del_flag    					AS "delFlag",
+		a.proc_ins_id 					AS "procInsId",
+		a.comp_id     					AS "compId",
+		a.supl_stat   					AS "suplStat",
+		a.appr_stat   					AS "apprStat",
+		a.attachment  					AS "attachment",
+		a.isChanged   					AS "isChanged",
+		a.freeze   	AS "freeze",
+		<include refid="com.thinkgem.jeesite.modules.gsp.dao.t01compinfo.T01CompInfoDao.t01CompInfoColumns">
+			<property name="alias" value="compInfo"/>
+			<property name="prefix" value="t01CompInfo."/>
+		</include>
+		,
+		<include refid="com.thinkgem.jeesite.modules.gsp.dao.t01compcert.T01CompCertDao.t01CompCertColumns">
+			<property name="alias" value="compCert0"/>
+			<property name="prefix" value="t01CompCert0."/>
+		</include>
+		,
+		<include refid="com.thinkgem.jeesite.modules.gsp.dao.t01compcert.T01CompCertDao.t01CompCertColumns">
+			<property name="alias" value="compCert3"/>
+			<property name="prefix" value="t01CompCert3."/>
+		</include>
+		,
+		<include refid="com.thinkgem.jeesite.modules.gsp.dao.t01compcert.T01CompCertDao.t01CompCertColumns">
+			<property name="alias" value="compCert1"/>
+			<property name="prefix" value="t01CompCert1."/>
+		</include>
+		,
+		<include refid="com.thinkgem.jeesite.modules.gsp.dao.t01compcert.T01CompCertDao.t01CompCertColumns">
+			<property name="alias" value="compCert2"/>
+			<property name="prefix" value="t01CompCert2."/>
+		</include>
+
+	</sql>
+	
+	<sql id="t01ComplSuplJoins">
+		LEFT JOIN t01_comp_info AS compInfo  ON a.comp_id=compInfo.id
+		LEFT JOIN t01_comp_cert AS compCert0 ON compInfo.id=compCert0.comp_id AND compCert0.cert_type='0' AND compCert0.del_flag=0
+		LEFT JOIN t01_comp_cert AS compCert3 ON compInfo.id=compCert3.comp_id AND compCert3.cert_type='3' AND compCert3.del_flag=0
+		LEFT JOIN t01_comp_cert AS compCert1 ON compInfo.id=compCert1.comp_id AND compCert1.cert_type='1' AND compCert1.del_flag=0
+		LEFT JOIN t01_comp_cert AS compCert2 ON compInfo.id=compCert2.comp_id AND compCert2.cert_type='2' AND compCert2.del_flag=0
+	</sql>
+
+	<select id="get" resultType="T01ComplSupl">
+		SELECT 
+			<include refid="t01ComplSuplColumns"/>
+		FROM t01_compl_supl a
+		<include refid="t01ComplSuplJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="T01ComplSupl">
+		SELECT 
+			<include refid="t01ComplSuplColumns"/>
+		FROM t01_compl_supl a
+		<include refid="t01ComplSuplJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.isChanged = '0'
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="createDate != null">
+				AND a.create_date = #{createDate}
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+				AND a.update_by = #{updateBy.id}
+			</if>
+			<if test="updateDate != null">
+				AND  date_format( a.update_date,'%Y-%m-%d')= date_format(#{updateDate},'%Y-%m-%d')
+			</if>
+			<if test="updateDateBg != null">
+				AND  a.update_date &gt;= #{updateDateBg}
+			</if>
+			<if test="updateDateEd != null">
+				AND   a.update_date &lt;= #{updateDateEd}
+			</if>
+			<if test="remarks != null and remarks != ''">
+				AND a.remarks LIKE
+				<if test="dbName == 'oracle'">'%'||#{remarks}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{remarks}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{remarks},'%')</if>
+			</if>
+			<if test="suplStat != null and suplStat != ''">
+				AND a.supl_stat = #{suplStat}
+			</if>
+			<if test="apprStat != null and apprStat != ''">
+				AND a.appr_stat = #{apprStat}
+			</if>
+			<if test="compId != null and compId != ''">
+				AND a.comp_id = #{compId}
+			</if>
+
+
+			<if test="t01CompInfo.id != null and t01CompInfo.id != ''">
+				AND compInfo.id = #{t01CompInfo.id}
+			</if>
+			<if test="t01CompInfo.abroad != null and t01CompInfo.abroad != ''">
+				AND compInfo.abroad = #{t01CompInfo.abroad}
+			</if>
+			<if test="t01CompInfo.compUniNbr != null and t01CompInfo.compUniNbr != ''">
+				AND compInfo.comp_uni_nbr LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompInfo.compUniNbr}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompInfo.compUniNbr}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompInfo.compUniNbr},'%')</if>
+			</if>
+			<if test="t01CompInfo.remarks != null and t01CompInfo.remarks != ''">
+				AND compInfo.remarks LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompInfo.remarks}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompInfo.remarks}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompInfo.remarks},'%')</if>
+			</if>
+			<if test="t01CompInfo.procInsId != null and t01CompInfo.procInsId != ''">
+				AND compInfo.proc_ins_id = #{t01CompInfo.procInsId}
+			</if>
+			<if test="t01CompInfo.compType != null and t01CompInfo.compType != ''">
+				AND compInfo.comp_type = #{t01CompInfo.compType}
+			</if>
+			<if test="t01CompInfo.uniCretNbr != null and t01CompInfo.uniCretNbr != ''">
+				AND compInfo.uni_cret_nbr LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompInfo.uniCretNbr}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompInfo.uniCretNbr}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompInfo.uniCretNbr},'%')</if>
+			</if>
+			<if test="t01CompInfo.regiNbr != null and t01CompInfo.regiNbr != ''">
+				AND compInfo.regi_nbr LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompInfo.regiNbr}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompInfo.regiNbr}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompInfo.regiNbr},'%')</if>
+			</if>
+			<if test="t01CompInfo.orgCertNbr != null and t01CompInfo.orgCertNbr != ''">
+				AND compInfo.org_cert_nbr LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompInfo.orgCertNbr}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompInfo.orgCertNbr}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompInfo.orgCertNbr},'%')</if>
+			</if>
+			<if test="t01CompInfo.taxNbr != null and t01CompInfo.taxNbr != ''">
+				AND compInfo.tax_nbr LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompInfo.taxNbr}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompInfo.taxNbr}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompInfo.taxNbr},'%')</if>
+			</if>
+			<if test="t01CompInfo.busiMode != null and t01CompInfo.busiMode != ''">
+				AND compInfo.busi_mode = #{t01CompInfo.busiMode}
+			</if>
+			<if test="t01CompInfo.busiLoca != null and t01CompInfo.busiLoca != ''">
+				AND compInfo.busi_loca LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompInfo.busiLoca}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompInfo.busiLoca}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompInfo.busiLoca},'%')</if>
+			</if>
+			<if test="t01CompInfo.storLoca != null and t01CompInfo.storLoca != ''">
+				AND compInfo.stor_loca LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompInfo.storLoca}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompInfo.storLoca}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompInfo.storLoca},'%')</if>
+			</if>
+			<if test="t01CompInfo.compNameCn != null and t01CompInfo.compNameCn != ''">
+				AND compInfo.comp_name_cn LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompInfo.compNameCn}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompInfo.compNameCn}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompInfo.compNameCn},'%')</if>
+			</if>
+			<if test="t01CompInfo.compNameEn != null and t01CompInfo.compNameEn != ''">
+				AND compInfo.comp_name_en LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompInfo.compNameEn}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompInfo.compNameEn}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompInfo.compNameEn},'%')</if>
+			</if>
+			<if test="t01CompInfo.shortName != null and t01CompInfo.shortName != ''">
+				AND compInfo.short_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompInfo.shortName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompInfo.shortName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompInfo.shortName},'%')</if>
+			</if>
+			<if test="t01CompInfo.compDesc != null and t01CompInfo.compDesc != ''">
+				AND compInfo.comp_desc LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompInfo.compDesc}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompInfo.compDesc}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompInfo.compDesc},'%')</if>
+			</if>
+			<if test="t01CompInfo.regiLoca != null and t01CompInfo.regiLoca != ''">
+				AND compInfo.regi_loca LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompInfo.regiLoca}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompInfo.regiLoca}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompInfo.regiLoca},'%')</if>
+			</if>
+			<if test="t01CompInfo.annuCheckStat != null and t01CompInfo.annuCheckStat != ''">
+				AND compInfo.annu_check_stat LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompInfo.annuCheckStat}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompInfo.annuCheckStat}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompInfo.annuCheckStat},'%')</if>
+			</if>
+			<if test="t01CompInfo.legalPers != null and t01CompInfo.legalPers != ''">
+				AND compInfo.legal_pers LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompInfo.legalPers}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompInfo.legalPers}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompInfo.legalPers},'%')</if>
+			</if>
+			<if test="t01CompInfo.prodAbliEval != null and t01CompInfo.prodAbliEval != ''">
+				AND compInfo.prod_abli_eval LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompInfo.prodAbliEval}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompInfo.prodAbliEval}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompInfo.prodAbliEval},'%')</if>
+			</if>
+			<if test="t01CompInfo.qualMgrEval != null and t01CompInfo.qualMgrEval != ''">
+				AND compInfo.qual_mgr_eval LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompInfo.qualMgrEval}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompInfo.qualMgrEval}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompInfo.qualMgrEval},'%')</if>
+			</if>
+			<if test="t01CompInfo.storAbliEval != null and t01CompInfo.storAbliEval != ''">
+				AND compInfo.stor_abli_eval LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompInfo.storAbliEval}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompInfo.storAbliEval}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompInfo.storAbliEval},'%')</if>
+			</if>
+			<if test="t01CompInfo.deliAbliEval != null and t01CompInfo.deliAbliEval != ''">
+				AND compInfo.deli_abli_eval LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompInfo.deliAbliEval}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompInfo.deliAbliEval}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompInfo.deliAbliEval},'%')</if>
+			</if>
+			<if test="t01CompInfo.afteSaleAbliEval != null and t01CompInfo.afteSaleAbliEval != ''">
+				AND compInfo.afte_sale_abli_eval LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompInfo.afteSaleAbliEval}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompInfo.afteSaleAbliEval}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompInfo.afteSaleAbliEval},'%')</if>
+			</if>
+			<if test="t01CompInfo.phonetic != null and t01CompInfo.phonetic != ''">
+				AND compInfo.phonetic LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompInfo.phonetic}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompInfo.phonetic}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompInfo.phonetic},'%')</if>
+			</if>
+			<if test="t01CompInfo.code != null and t01CompInfo.code != ''">
+				AND compInfo.code LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompInfo.code}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompInfo.code}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompInfo.code},'%')</if>
+			</if>
+			<if test="t01CompInfo.areaCode != null and t01CompInfo.areaCode != ''">
+				AND compInfo.area_code LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompInfo.areaCode}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompInfo.areaCode}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompInfo.areaCode},'%')</if>
+			</if>
+			<if test="t01CompInfo.telephone != null and t01CompInfo.telephone != ''">
+				AND compInfo.telephone LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompInfo.telephone}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompInfo.telephone}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompInfo.telephone},'%')</if>
+			</if>
+			<if test="t01CompInfo.fax != null and t01CompInfo.fax != ''">
+				AND compInfo.fax LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompInfo.fax}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompInfo.fax}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompInfo.fax},'%')</if>
+			</if>
+			<if test="t01CompInfo.telegraph != null and t01CompInfo.telegraph != ''">
+				AND compInfo.telegraph LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompInfo.telegraph}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompInfo.telegraph}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompInfo.telegraph},'%')</if>
+			</if>
+			<if test="t01CompInfo.contPers != null and t01CompInfo.contPers != ''">
+				AND compInfo.cont_pers LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompInfo.contPers}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompInfo.contPers}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompInfo.contPers},'%')</if>
+			</if>
+			<if test="t01CompInfo.contPersTel != null and t01CompInfo.contPersTel != ''">
+				AND compInfo.cont_pers_tel LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompInfo.contPersTel}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompInfo.contPersTel}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompInfo.contPersTel},'%')</if>
+			</if>
+			<if test="t01CompInfo.email != null and t01CompInfo.email != ''">
+				AND compInfo.email LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompInfo.email}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompInfo.email}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompInfo.email},'%')</if>
+			</if>
+
+            <!--<include refid="wherePart"/>-->
+
+			<if test="t01CompCert0.id != null and t01CompCert0.id != ''">
+				AND compCert0.id = #{t01CompCert0.id}
+			</if>
+			<if test="t01CompCert0.compId != null and t01CompCert0.compId != ''">
+				AND compCert0.comp_id = #{t01CompCert0.compId}
+			</if>
+			<if test="t01CompCert0.certType != null and t01CompCert0.certType != ''">
+				AND compCert0.cert_type = #{t01CompCert0.certType}
+			</if>
+			<if test="t01CompCert0.effecDate != null">
+				AND  date_format( compCert0.effec_date,'%Y-%m-%d')= date_format(#{t01CompCert0.effecDate},'%Y-%m-%d')
+			</if>
+			<if test="t01CompCert0.validDate != null">
+				AND  date_format( compCert0.valid_date,'%Y-%m-%d')= date_format(#{t01CompCert0.validDate},'%Y-%m-%d')
+			</if>
+			<if test="t01CompCert0.certStat != null and t01CompCert0.certStat != ''">
+				AND (compCert0.cert_stat = #{t01CompCert0.certStat}
+				or compCert3.cert_stat = #{t01CompCert0.certStat})
+			</if>
+			<if test="t01CompCert0.apprStat != null and t01CompCert0.apprStat != ''">
+				AND compCert0.appr_stat = #{t01CompCert0.apprStat}
+			</if>
+			<if test="t01CompCert0.remarks != null and t01CompCert0.remarks != ''">
+				AND compCert0.remarks LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompCert0.remarks}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompCert0.remarks}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompCert0.remarks},'%')</if>
+			</if>
+			<if test="t01CompCert0.certNbr != null and t01CompCert0.certNbr != ''">
+				AND compCert0.cert_nbr LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompCert0.certNbr}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompCert0.certNbr}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompCert0.certNbr},'%')</if>
+			</if>
+			<if test="t01CompCert0.certName != null and t01CompCert0.certName != ''">
+				AND compCert0.cert_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompCert0.certName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompCert0.certName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompCert0.certName},'%')</if>
+			</if>
+			<if test="t01CompCert0.certScop != null and t01CompCert0.certScop != ''">
+				AND compCert0.cert_scop LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompCert0.certScop}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompCert0.certScop}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompCert0.certScop},'%')</if>
+			</if>
+
+
+			<if test="t01CompCert3.id != null and t01CompCert3.id != ''">
+				AND compCert3.id = #{t01CompCert3.id}
+			</if>
+			<if test="t01CompCert3.compId != null and t01CompCert3.compId != ''">
+				AND compCert3.comp_id = #{t01CompCert3.compId}
+			</if>
+			<if test="t01CompCert3.certType != null and t01CompCert3.certType != ''">
+				AND compCert3.cert_type = #{t01CompCert3.certType}
+			</if>
+			<if test="t01CompCert3.effecDate != null">
+				AND  date_format( compCert3.effec_date,'%Y-%m-%d')= date_format(#{t01CompCert3.effecDate},'%Y-%m-%d')
+			</if>
+			<if test="t01CompCert3.effecDateBg != null">
+				AND   (compCert3.effec_date &gt;= #{t01CompCert3.effecDateBg}
+				OR    compCert0.effec_date &gt;= #{t01CompCert3.effecDateBg})
+			</if>
+			<if test="t01CompCert3.effecDateEd != null">
+				AND  (compCert3.effec_date &lt;= #{t01CompCert3.effecDateEd}
+				OR  compCert0.effec_date &lt;= #{t01CompCert3.effecDateEd})
+			</if>
+			<if test="t01CompCert3.validDate != null">
+				AND  date_format( compCert3.valid_date,'%Y-%m-%d')= date_format(#{t01CompCert3.validDate},'%Y-%m-%d')
+			</if>
+			<if test="t01CompCert3.validDateBg != null">
+				AND  (compCert3.valid_date &gt;= #{t01CompCert3.validDateBg}
+				OR   compCert0.valid_date &gt;= #{t01CompCert3.validDateBg})
+			</if>
+			<if test="t01CompCert3.validDateEd != null">
+				AND   (compCert3.valid_date &lt;= #{t01CompCert3.validDateEd}
+				OR  compCert0.valid_date &lt;= #{t01CompCert3.validDateEd})
+			</if>
+			<if test="t01CompCert3.certStat != null and t01CompCert3.certStat != ''">
+				AND compCert3.cert_stat = #{t01CompCert3.certStat}
+			</if>
+			<if test="t01CompCert3.apprStat != null and t01CompCert3.apprStat != ''">
+				AND compCert3.appr_stat = #{t01CompCert3.apprStat}
+			</if>
+			<if test="t01CompCert3.remarks != null and t01CompCert3.remarks != ''">
+				AND compCert3.remarks LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompCert3.remarks}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompCert3.remarks}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompCert3.remarks},'%')</if>
+			</if>
+			<if test="t01CompCert3.certNbr != null and t01CompCert3.certNbr != ''">
+				AND compCert3.cert_nbr LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompCert3.certNbr}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompCert3.certNbr}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompCert3.certNbr},'%')</if>
+			</if>
+			<if test="t01CompCert3.certName != null and t01CompCert3.certName != ''">
+				AND compCert3.cert_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompCert3.certName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompCert3.certName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompCert3.certName},'%')</if>
+			</if>
+			<if test="t01CompCert3.certScop != null and t01CompCert3.certScop != ''">
+				AND compCert3.cert_scop LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompCert3.certScop}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompCert3.certScop}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompCert3.certScop},'%')</if>
+			</if>
+
+
+			<if test="t01CompCert1.id != null and t01CompCert1.id != ''">
+				AND compCert1.id = #{t01CompCert1.id}
+			</if>
+			<if test="t01CompCert1.compId != null and t01CompCert1.compId != ''">
+				AND compCert1.comp_id = #{t01CompCert1.compId}
+			</if>
+			<if test="t01CompCert1.certType != null and t01CompCert1.certType != ''">
+				AND compCert1.cert_type = #{t01CompCert1.certType}
+			</if>
+			<if test="t01CompCert1.effecDate != null">
+				AND  date_format( compCert1.effec_date,'%Y-%m-%d')= date_format(#{t01CompCert1.effecDate},'%Y-%m-%d')
+			</if>
+			<if test="t01CompCert1.validDate != null">
+				AND  date_format( compCert1.valid_date,'%Y-%m-%d')= date_format(#{t01CompCert1.validDate},'%Y-%m-%d')
+			</if>
+			<if test="t01CompCert1.effecDateBg != null">
+				AND  compCert1.effec_date &gt;= #{t01CompCert1.effecDateBg}
+			</if>
+			<if test="t01CompCert1.effecDateEd != null">
+				AND   compCert1.effec_date &lt;= #{t01CompCert1.effecDateEd}
+			</if>
+			<if test="t01CompCert1.validDateBg != null">
+				AND  compCert1.valid_date &gt;= #{t01CompCert1.validDateBg}
+			</if>
+			<if test="t01CompCert1.validDateEd != null">
+				AND   compCert1.valid_date &lt;= #{t01CompCert1.validDateEd}
+			</if>
+			<if test="t01CompCert1.certStat != null and t01CompCert1.certStat != ''">
+				AND compCert1.cert_stat = #{t01CompCert1.certStat}
+			</if>
+			<if test="t01CompCert1.apprStat != null and t01CompCert1.apprStat != ''">
+				AND compCert1.appr_stat = #{t01CompCert1.apprStat}
+			</if>
+			<if test="t01CompCert1.remarks != null and t01CompCert1.remarks != ''">
+				AND compCert1.remarks LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompCert1.remarks}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompCert1.remarks}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompCert1.remarks},'%')</if>
+			</if>
+			<if test="t01CompCert1.certNbr != null and t01CompCert1.certNbr != ''">
+				AND compCert1.cert_nbr LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompCert1.certNbr}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompCert1.certNbr}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompCert1.certNbr},'%')</if>
+			</if>
+			<if test="t01CompCert1.certName != null and t01CompCert1.certName != ''">
+				AND compCert1.cert_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompCert1.certName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompCert1.certName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompCert1.certName},'%')</if>
+			</if>
+			<if test="t01CompCert1.certScop != null and t01CompCert1.certScop != ''">
+				AND compCert1.cert_scop LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompCert1.certScop}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompCert1.certScop}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompCert1.certScop},'%')</if>
+			</if>
+
+
+
+			<if test="t01CompCert2.id != null and t01CompCert2.id != ''">
+				AND compCert2.id = #{t01CompCert2.id}
+			</if>
+			<if test="t01CompCert2.compId != null and t01CompCert2.compId != ''">
+				AND compCert2.comp_id = #{t01CompCert2.compId}
+			</if>
+			<if test="t01CompCert2.certType != null and t01CompCert2.certType != ''">
+				AND compCert2.cert_type = #{t01CompCert2.certType}
+			</if>
+			<if test="t01CompCert2.effecDate != null">
+				AND  date_format( compCert2.effec_date,'%Y-%m-%d')= date_format(#{t01CompCert2.effecDate},'%Y-%m-%d')
+			</if>
+			<if test="t01CompCert2.validDate != null">
+				AND  date_format( compCert2.valid_date,'%Y-%m-%d')= date_format(#{t01CompCert2.validDate},'%Y-%m-%d')
+			</if>
+			<if test="t01CompCert2.effecDateBg != null">
+				AND  compCert2.effec_date &gt;= #{t01CompCert2.effecDateBg}
+			</if>
+			<if test="t01CompCert2.effecDateEd != null">
+				AND   compCert2.effec_date &lt;= #{t01CompCert2.effecDateEd}
+			</if>
+			<if test="t01CompCert2.validDateBg != null">
+				AND  compCert2.valid_date &gt;= #{t01CompCert2.validDateBg}
+			</if>
+			<if test="t01CompCert2.validDateEd != null">
+				AND   compCert2.valid_date &lt;= #{t01CompCert2.validDateEd}
+			</if>
+			<if test="t01CompCert2.certStat != null and t01CompCert2.certStat != ''">
+				AND compCert2.cert_stat = #{t01CompCert2.certStat}
+			</if>
+			<if test="t01CompCert2.apprStat != null and t01CompCert2.apprStat != ''">
+				AND compCert2.appr_stat = #{t01CompCert2.apprStat}
+			</if>
+			<if test="t01CompCert2.remarks != null and t01CompCert2.remarks != ''">
+				AND compCert2.remarks LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompCert2.remarks}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompCert2.remarks}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompCert2.remarks},'%')</if>
+			</if>
+			<if test="t01CompCert2.certNbr != null and t01CompCert2.certNbr != ''">
+				AND compCert2.cert_nbr LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompCert2.certNbr}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompCert2.certNbr}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompCert2.certNbr},'%')</if>
+			</if>
+			<if test="t01CompCert2.certName != null and t01CompCert2.certName != ''">
+				AND compCert2.cert_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompCert2.certName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompCert2.certName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompCert2.certName},'%')</if>
+			</if>
+			<if test="t01CompCert2.certScop != null and t01CompCert2.certScop != ''">
+				AND compCert2.cert_scop LIKE
+				<if test="dbName == 'oracle'">'%'||#{t01CompCert2.certScop}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{t01CompCert2.certScop}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{t01CompCert2.certScop},'%')</if>
+			</if>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY (CASE WHEN a.appr_stat='0' THEN 1
+				WHEN a.appr_stat='1' THEN 2
+				WHEN a.appr_stat='3' THEN 3
+				WHEN a.appr_stat='2' THEN 4 END),
+				a.update_date
+				DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="T01ComplSupl">
+		SELECT 
+			<include refid="t01ComplSuplColumns"/>
+		FROM t01_compl_supl a
+		<include refid="t01ComplSuplJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO t01_compl_supl(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			proc_ins_id,
+			comp_id,
+			supl_stat,
+			appr_stat,
+			attachment,
+			cert_type
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{procInsId},
+			#{compId},
+			#{suplStat},
+			#{apprStat},
+			#{attachment},
+			#{certType}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE t01_compl_supl SET
+			id = #{id},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			proc_ins_id = #{procInsId},
+			comp_id = #{compId},
+			supl_stat = #{suplStat},
+			appr_stat = #{apprStat},
+			attachment = #{attachment},
+			isChanged = #{isChanged},
+			cert_type = #{certType}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE t01_compl_supl SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	<select id="checkOnlyByComp" resultType="int">
+		select count(*) from t01_compl_supl
+		where del_flag= 0
+		and comp_id = #{t01CompInfo.id}
+		and id &lt;&gt; #{id}
+	</select>
+</mapper>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t01compinfo.SalesCertDao">
+    
+	<sql id="t01SalesCertColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.proc_ins_id AS "procInsId",
+		a.comp_id AS "compId",
+		a.sales_name AS "salesName",
+		a.id_type AS "idType",
+		a.id_nbr AS "idNbr",
+		a.sales_area AS "salesArea",
+		a.sales_scop AS "salesScop",
+		a.sales_cert_nbr AS "salesCertNbr",
+		a.effec_date AS "effecDate",
+		a.valid_date AS "validDate",
+		a.appr_stat AS "apprStat",
+		a.attachment AS "attachment"
+	</sql>
+	
+	<sql id="t01SalesCertJoins">
+		LEFT JOIN t01_comp_info b ON b.id = a.comp_id
+	</sql>
+    
+	<select id="get" resultType="T01SalesCert">
+		SELECT 
+			<include refid="t01SalesCertColumns"/>
+		FROM t01_sales_cert a
+		<include refid="t01SalesCertJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="T01SalesCert">
+		SELECT 
+			<include refid="t01SalesCertColumns"/>
+		FROM t01_sales_cert a
+		<include refid="t01SalesCertJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="T01SalesCert">
+		SELECT 
+			<include refid="t01SalesCertColumns"/>
+		FROM t01_sales_cert a
+		<include refid="t01SalesCertJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t01_sales_cert(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			proc_ins_id,
+			comp_id,
+			sales_name,
+			id_type,
+			id_nbr,
+			sales_area,
+			sales_scop,
+			sales_cert_nbr,
+			effec_date,
+			valid_date,
+			appr_stat,
+			attachment
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{procInsId},
+			#{compId},
+			#{salesName},
+			#{idType},
+			#{idNbr},
+			#{salesArea},
+			#{salesScop},
+			#{salesCertNbr},
+			#{effecDate},
+			#{validDate},
+			#{apprStat},
+			#{attachment}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t01_sales_cert SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			proc_ins_id = #{procInsId},
+			comp_id = #{compId},
+			sales_name = #{salesName},
+			id_type = #{idType},
+			id_nbr = #{idNbr},
+			sales_area = #{salesArea},
+			sales_scop = #{salesScop},
+			sales_cert_nbr = #{salesCertNbr},
+			effec_date = #{effecDate},
+			valid_date = #{validDate},
+			appr_stat = #{apprStat},
+			attachment = #{attachment}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t01_sales_cert SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

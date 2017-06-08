@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.sys.dao.SysAlarmFilterDao">
+    
+	<sql id="sysAlarmFilterColumns">
+		a.id AS "id",
+		a.role AS "role",
+		a.included AS "included"
+	</sql>
+	
+	<sql id="sysAlarmFilterJoins">
+	</sql>
+    
+	<select id="get" resultType="SysAlarmFilter">
+		SELECT 
+			<include refid="sysAlarmFilterColumns"/>
+		FROM sys_alarm_filter a
+		<include refid="sysAlarmFilterJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SysAlarmFilter">
+		SELECT 
+			<include refid="sysAlarmFilterColumns"/>
+		FROM sys_alarm_filter a
+		<include refid="sysAlarmFilterJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SysAlarmFilter">
+		SELECT 
+			<include refid="sysAlarmFilterColumns"/>
+		FROM sys_alarm_filter a
+		<include refid="sysAlarmFilterJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sys_alarm_filter(
+			id,
+			role,
+			included
+		) VALUES (
+			#{id},
+			#{role},
+			#{included}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sys_alarm_filter SET 	
+			role = #{role},
+			included = #{included}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM sys_alarm_filter
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

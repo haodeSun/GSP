@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+	<name>viewForm</name>
+	<filePath>src/main/webapp/WEB-INF/views/${lastPackageName}/${moduleName}/${subModuleName}</filePath>
+	<fileName>${className}Form.jsp</fileName>
+	<content><![CDATA[
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ include file="/WEB-INF/views/include/taglib.jsp"%>
+<html>
+<head>
+	<title>${functionNameSimple}管理</title>
+	<meta name="decorator" content="default"/>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("#inputForm").validate({
+				submitHandler: function(form){
+					loading('正在提交，请稍等...');
+					form.submit();
+				},
+				errorContainer: "#messageBox",
+				errorPlacement: function(error, element) {
+					$("#messageBox").text("输入有误，请先更正。");
+					if (element.is(":checkbox")||element.is(":radio")||element.parent().is(".input-append")){
+						error.appendTo(element.parent().parent());
+					} else {
+						error.insertAfter(element);
+					}
+				}
+			});
+		});
+	</script>
+</head>
+<body>
+	<ul class="breadcrumb">
+		<li>首页<span class="divider">&gt;</span></li>
+		<li>${functionNameSimple}<span class="divider">&gt;</span></li>
+		<li class="active">${functionNameSimple}新增</li>
+	</ul>
+
+	<div id="topTitle">${functionNameSimple}新增</div>
+
+	<form:form id="inputForm" modelAttribute="${className}" action="${r"${ctx}"}/${urlPrefix}/save" method="post" class="form-horizontal">
+		<form:hidden path="id"/>
+		<sys:message content="${r"${message}"}"/>	
+		<div id="pagingDiv" class="table-scrollable">
+			<ul class="nav nav-tabs" role="tablist">
+			<#--如果分组列表存在并且有内容-->
+		<#if groupList?has_content>
+		<#--遍历分组-->
+			<#list groupList as group>
+			 <#--如果有组名，则可以认为需要产生分组标签-->
+				<#if group.groupName?has_content  >
+				<#--分组第一个需要设置active-->
+				<li role="presentation" <#if group?is_first > class="active"</#if>>
+					<a href="#p${group_index}" role="tab" data-toggle="tab">
+					<#--输出组名-->
+     					${group.groupName}
+   					</a>
+				</li>
+				</#if>
+			</#list>
+		</#if>
+			</ul>
+			<div class="tab-content">
+			<#--如果分组列表存在并且有内容-->
+		<#if groupList?has_content>
+			<#list groupList as group>
+				<div role="tabpanel"  class=
+				<#--如果有组名并且是第一个，就设置为活动页-->
+				<#if group.groupName?has_content> 
+					<#if group?is_first> 
+						"tab-pane fade in active"
+					<#else>
+						"tab-pane fade"
+					</#if>
+				<#else>
+					"tab-pane fade in active"
+				</#if>
+				
+				 id="p${group_index}">
+					<#list group.columns as column>
+					<#if column.isEdit?? && column.isEdit == "1" && (column.isNotBaseField || column.simpleJavaField == 'remarks')>
+							
+								<div class="control-group">
+									<label class="control-label">									<#if column.isNull != "1">
+										<span class="help-inline"><font color="red">*</font> </span>
+									</#if>${column.comments}：</label>
+									<div class="controls">
+									<#if column.showType == "input">
+										<form:input path="${column.javaFieldId}" htmlEscape="false"<#if column.dataLength != "0"> maxlength="${column.dataLength}"</#if> class="input-xlarge <#if column.isNull != "1">required</#if><#if column.javaType == "Long" || column.javaType == "Integer"> digits</#if><#if column.javaType == "Double"> number</#if>"/>
+									<#elseif column.showType == "textarea">
+										<form:textarea path="${column.javaFieldId}" htmlEscape="false" rows="4"<#if column.dataLength != "0"> maxlength="${column.dataLength}"</#if> class="input-xxlarge <#if column.isNull != "1">required</#if>"/>
+									<#elseif column.showType == "select">
+										<form:select path="${column.javaFieldId}" class="input-xlarge <#if column.isNull != "1">required</#if>">
+											<form:option value="" label=""/>
+											<form:options items="${"$"}{fns:getDictList('${column.dictType}')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+										</form:select>
+									<#elseif column.showType == "checkbox">
+										<form:checkboxes path="${column.javaFieldId}" items="${"$"}{fns:getDictList('${column.dictType}')}" itemLabel="label" itemValue="value" htmlEscape="false" class="<#if column.isNull != "1">required</#if>"/>
+									<#elseif column.showType == "radiobox">
+										<form:radiobuttons path="${column.javaFieldId}" items="${"$"}{fns:getDictList('${column.dictType}')}" itemLabel="label" itemValue="value" htmlEscape="false" class="<#if column.isNull != "1">required</#if>"/>
+									<#elseif column.showType == "dateselect">
+										<input name="${column.javaFieldId}" type="text" readonly="readonly" maxlength="20" class="input-medium datepicker <#if column.isNull != "1">required</#if>"
+											value="<fmt:formatDate value="${"$"}{${className}.${column.javaFieldId}}" pattern="yyyy-MM-dd HH:mm:ss"/>"
+											/>
+									<#elseif column.showType == "userselect">
+										<sys:treeselect id="${column.simpleJavaField}" name="${column.javaFieldId}" value="${"$"}{${className}.${column.javaFieldId}}" labelName="${column.javaFieldName}" labelValue="${"$"}{${className}.${column.javaFieldName}}"
+											title="用户" url="/sys/office/treeData?type=3" cssClass="<#if column.isNull != "1">required</#if>" allowClear="true" notAllowSelectParent="true"/>
+									<#elseif column.showType == "officeselect">
+										<sys:treeselect id="${column.simpleJavaField}" name="${column.javaFieldId}" value="${"$"}{${className}.${column.javaFieldId}}" labelName="${column.javaFieldName}" labelValue="${"$"}{${className}.${column.javaFieldName}}"
+											title="部门" url="/sys/office/treeData?type=2" cssClass="<#if column.isNull != "1">required</#if>" allowClear="true" notAllowSelectParent="true"/>
+									<#elseif column.showType == "areaselect">
+										<sys:treeselect id="${column.simpleJavaField}" name="${column.javaFieldId}" value="${"$"}{${className}.${column.javaFieldId}}" labelName="${column.javaFieldName}" labelValue="${"$"}{${className}.${column.javaFieldName}}"
+											title="区域" url="/sys/area/treeData" cssClass="<#if column.isNull != "1">required</#if>" allowClear="true" notAllowSelectParent="true"/>
+									<#elseif column.showType == "fileselect">
+										<form:hidden id="${column.simpleJavaField}" path="${column.javaFieldId}" htmlEscape="false"<#if column.dataLength != "0"> maxlength="${column.dataLength}"</#if> class="input-xlarge"/>
+										<sys:ckfinder input="${column.simpleJavaField}" type="files" uploadPath="/${moduleName}<#if subModuleName != "">/${subModuleName}</#if>/${className}" selectMultiple="true"/>
+									</#if>
+									</div>
+								</div>
+							
+						</#if>
+				</#list>
+							</div>
+			</#list>
+		</#if>
+			</div>
+		</div>
+		<div id="footBtnDiv" class="form-actions">
+
+			<shiro:hasPermission name="${permissionPrefix}:edit">
+			<input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;
+			</shiro:hasPermission>
+
+			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)" />
+		</div>
+
+	</form:form>
+</body>
+</html>
+		]]>
+	</content>
+</template>

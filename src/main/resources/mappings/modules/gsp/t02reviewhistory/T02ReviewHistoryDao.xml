@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gsp.dao.t02reviewhistory.T02ReviewHistoryDao">
+    
+	<sql id="t02ReviewHistoryColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.reivew_type AS "reivewType",
+		a.review_result AS "reviewResult",
+		a.review_inst AS "reviewInst"
+	</sql>
+	
+	<sql id="t02ReviewHistoryJoins">
+	</sql>
+    
+	<select id="get" resultType="T02ReviewHistory">
+		SELECT 
+			<include refid="t02ReviewHistoryColumns"/>
+		FROM t02_review_history a
+		<include refid="t02ReviewHistoryJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="T02ReviewHistory">
+		SELECT 
+			<include refid="t02ReviewHistoryColumns"/>
+		FROM t02_review_history a
+		<include refid="t02ReviewHistoryJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="T02ReviewHistory">
+		SELECT 
+			<include refid="t02ReviewHistoryColumns"/>
+		FROM t02_review_history a
+		<include refid="t02ReviewHistoryJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t02_review_history(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			reivew_type,
+			review_result,
+			review_inst
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{reivewType},
+			#{reviewResult},
+			#{reviewInst}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t02_review_history SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			reivew_type = #{reivewType},
+			review_result = #{reviewResult},
+			review_inst = #{reviewInst}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE t02_review_history SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
